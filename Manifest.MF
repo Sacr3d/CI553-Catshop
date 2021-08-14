@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Created-By: mas
-Class-Path: ./lib/db-derby-10.14.2.0-lib/lib/derby.jar
-Main-Class: clients.Main

@@ -1,4 +1,18 @@
-/catshop.db/
-/catshop.jar
-/setup.jar
-/derby.log
+# Catshop Core
+catshop.db/
+catshop.jar
+setup.jar
+derby.log
+DataBase.txt
+/lib
+
+# Maven
+/target/
+dependency-reduced-pom.xml
+
+# Eclipse Core      
+/.settings
+.project
+
+# JDT-specific (Eclipse Java Development Tools)     
+.classpath

@@ -1,173 +1,160 @@
-# ####################################################################
-# Version 20-October-2015
-# THESE DEFINITIONS WILL HAVE TO BE CHANGED FOR YOUR COMPUTER
-# ####################################################################
-#
-# --------------------------------------------------------------------
-#IMPORTANT variables
-#  DERBY_HOME JUNIT
-#   should be set to the appropriate path for your system
-#  SEP
-#   should be set to the appropriate separator between file names
-#
-# The last definition is the one used
-#  (The currently set (last used) is for cygwin on windows)
-#
-# Note you will need to add the JUnit test file you create
-# to the files that are compiled
-# --------------------------------------------------------------------
+# Author: Mattia Sassone
+# Version: 1.0
 
-# --------------------------------------------------------------------
-#   The base of the Apache Derby database system
-# --------------------------------------------------------------------
-    DERBY_HOME=$(WORKSPACE)/lib/db-derby-10.14.2.0-lib
-# --------------------------------------------------------------------
+AUTHOR:= Mattia Sassone
+VERSION:= 1.0
 
-# --------------------------------------------------------------------
-#   Where the JUnit jar file is held
-#    Only needed if you are to compile a JUnit test class
-#    By default you do (orders.OrderTest.java)
-# --------------------------------------------------------------------
-    JUNIT=/opt/java/current/lib/junit-4.8.2.jar
-    JUNIT="C:/Program Files (x86)/BlueJ/lib/junit-4.8.2.jar"
-# --------------------------------------------------------------------
+TARGET:= target
 
-# --------------------------------------------------------------------
-#   Separator used in java classpath (; Windows : Unix/Linux)
-# --------------------------------------------------------------------
-    SEP=:
-    SEP=\;
-# --------------------------------------------------------------------
+DERBY_DATABASE:= catshop.db
 
-# ####################################################################
-# DO NOT CHANGE BEYOND HERE
-# ####################################################################
+DERBY_DATABASE_TXT:= echo "Derby" > DataBase.txt
 
-# --------------------------------------------------------------------
-# class path for compilation/ run
-# --------------------------------------------------------------------
-#CP_DERBY=$(DERBY_HOME)/derby.jar$(SEP)$(DERBY_HOME)/derbytools.jar$(SEP).
-CP_DERBY=$(DERBY_HOME)/lib/derbyshared.jar$(SEP)$(DERBY_HOME)/lib/derby.jar$(SEP)$(DERBY_HOME)/lib/derbytools.jar$(SEP).
-#
-DEPRECATED=-Xlint:deprecation
-DEPRECATED=
-FLAGS= -source 1.8 -Xlint:unchecked
-FLAGS= -source 1.8
-FLAGS=
+TARGET_JAR:= $(shell cd target && find . -maxdepth 1 -name 'original-*' | cut -d'-' -f2-)
+TARGET_JAR_CATSHOP:= $(shell find $(TARGET)/ -maxdepth 1 -name '*-catshop.jar')
+TARGET_JAR_SETUP:= $(shell find $(TARGET)/ -maxdepth 1 -name '*-setup.jar')
 
+CATSHOP_JAR:= catshop.jar
+SETUP_JAR:= setup.jar
 
-compile:	
-	javac $(DEPRECATED) $(FLAGS) -cp $(JUNIT)         \
-                            catalogue/*.java              \
-                            middle/*.java                 \
-                            dbAccess/*.java               \
-                            orders/Order.java             \
-                            orders/OrderTest.java         \
-                            orders/OrderX.java            \
-                            orders/OrderTestX.java        \
-                            clients/*.java                \
-                            clients/*/*.java              \
-                            remote/*.java                 \
-                            debug/*.java
+JAVA_PACKAGE:= com.example.app
+JAVA_PACKAGE_CLIENTS:= $(JAVA_PACKAGE).clients
+JAVA_PACKAGE_MIDDLE:= $(JAVA_PACKAGE).middle
 
-clean:
+JAVA_PACKAGE_PATH:= com/example/app
+
+MAIN_CLASS:= $(JAVA_PACKAGE).Main
+SETUP_CLASS:= $(JAVA_PACKAGE_CLIENTS).Setup
+SERVER_CLASS:= $(JAVA_PACKAGE_MIDDLE).Server
+
+BACKDOOR_CLASS:= $(JAVA_PACKAGE_CLIENTS).backDoor.BackDoorClient
+CUSTOMER_CLASS:= $(JAVA_PACKAGE_CLIENTS).customer.CustomerClient
+CAHSIER_CLASS:= $(JAVA_PACKAGE_CLIENTS).cashier.CashierClient
+PICK_CLASS:= $(JAVA_PACKAGE_CLIENTS).warehousePick.PickClient
+DISPLAY_CLASS:= $(JAVA_PACKAGE_CLIENTS).shopDisplay.DisplayClient
+COLLECT_CLASS:= $(JAVA_PACKAGE_CLIENTS).collection.CollectClient
+
+install:
+	@echo "Cleaning previous package"
+	@$(MAKE) clean-all
+	@echo "Derby Preperation"
+	@$(DERBY_DATABASE_TXT)
+	@echo "Installing with Maven"
+	@mvn install
+	@echo "Copying artifacts"
+	@cd $(TARGET);				\
+		$(DERBY_DATABASE_TXT);	\
+		cd ..
+	cp -r images $(TARGET)
+	@$(MAKE) clean-local
+	@$(MAKE) post-install
+
+post-install:
+	@echo "Prepareing Derby install"
+	@$(DERBY_DATABASE_TXT)
+	@echo "Renaming Snapshots"
+	@mv $(TARGET_JAR_CATSHOP) $(CATSHOP_JAR)
+	@mv $(TARGET_JAR_SETUP) $(SETUP_JAR)
+
+package:
+	@echo "Cleaning previous package"
+	@$(MAKE) clean-all
+	@echo "Derby Preperation"
+	@$(DERBY_DATABASE_TXT)
+	@echo "Packaging with Maven"
+	@mvn package
+	@echo "Copying artifacts"
+	@cd $(TARGET);							\
+		$(DERBY_DATABASE_TXT);				\
+		cd ..
+	@cp -r images $(TARGET)
+	@$(MAKE) clean-local
+
+compile:
+	@echo "Compiling with Maven"
+	@mvn compile
+
+clean-all:
+	@echo "Cleaning Maven"
+	@mvn clean
+	@$(MAKE) clean-lib
+	@$(MAKE) clean-local
+
+clean-local:
+	@echo "Cleaning local"
 	rm -f -r catshop.db
-	rm -f */*.class */*/*.class */*.bak *.bak
-	rm -f -r html
-	rm -f 00text 00text.rtf 000text 000text.rtf
-	rm -f -r doc
-	rm -f clients/__SHEL*
-	rm -f _list.sh derby.log
-	rm -f *.jar Mainifest.MF manifest2.MF
+	rm -f -r DataBase.txt
+	rm -f -r derby.log
+	rm -f -r $(CATSHOP_JAR)
+	rm -f -r $(SETUP_JAR)
+
+clean-lib:
+	@echo "Cleaning libaries"
+	rm -f -r lib
 
 doc:
-	echo "Making documentation"
-	javadoc -sourcepath $(WIN_SDK1)\\src.zip              \
-        -classpath $(JUNIT)                                   \
-	-group catalogue Catalogue                            \
-	-header "<FONT color="lightblue">CatShop</FONT>"      \
-	-author -windowtitle "CatShop"                        \
-	-use -splitindex -d html                              \
-	-package clients/*.java                               \
-	         clients/backDoor/*.java                      \
-	         clients/cashier/*.java                       \
-	         clients/collection/*.java                    \
-	         clients/customer/*.java                      \
-	         clients/shopDisplay/*.java                   \
-	         clients/warehousePick/*.java                 \
-	         catalogue/*.java middle/*.java               \
-                 dbAccess/*.java orders/*.java remote/*.java  \
-		 debug/*.java 
-
-jar:
-	echo "Requires derby.jar in the current directory"
-
-	cp  $(DERBY_HOME)/derby.jar derby.jar
-
-	echo Manifest-Version: 1.0         > Manifest.MF
-	echo Created-By: mas              >> Manifest.MF
-	echo Class-Path: ./derby.jar      >> Manifest.MF
-	echo Main-Class: clients.Main     >> Manifest.MF
-
-
-	jar cfm catshop.jar Manifest.MF                    \
-                            catalogue/*.class              \
-                            middle/*.class                 \
-                            dbAccess/*.class               \
-                            orders/Order*.class            \
-                            clients/*.class                \
-                            clients/*/*.class              \
-                            remote/*.class                 \
-                            debug/*.class                  \
-                            DataBase.txt
-
-	echo Manifest-Version: 1.0         > Manifest2.MF
-	echo Created-By: mas              >> Manifest2.MF
-	echo Class-Path: ./derby.jar      >> Manifest2.MF
-	echo Main-Class: clients.Setup    >> Manifest2.MF
-
-	jar cfm setup.jar Manifest2.MF                      \
-                            catalogue/*.class              \
-                            middle/*.class                 \
-                            dbAccess/*.class               \
-                            orders/Order*.class            \
-                            clients/*.class                \
-                            clients/*/*.class              \
-                            remote/*.class                 \
-                            debug/*.class                  \
-                            DataBase.txt
-
+	@echo "Making documentation with Maven"
+	@mvn javadoc:jar
 
 jarrun:
-	java -jar setup.jar
-	java -jar catshop.jar
-
+ifneq (,$(wildcard DataBase.txt))
+		java -jar $(SETUP_JAR);			\
+		java -jar $(CATSHOP_JAR)
+else
+	@echo "No local installation found please run 'make install'"
+endif
 
 test:
-	java -cp $(JUNIT)$(SEP)$(CP_DERBY) org.junit.runner.JUnitCore orders.OrderTest
+	@$(MAKE) clean-local;
+	@$(DERBY_DATABASE_TXT);
+	@mvn test
+	@$(MAKE) clean-local
 
-testX:
-	java -cp $(JUNIT)$(SEP)$(CP_DERBY) org.junit.runner.JUnitCore orders.OrderTestX
+distributed: 
+	@$(MAKE) database
+	@$(MAKE) server
+	@$(MAKE) clients
+	@read -p "CTRL + C to exit or Enter to kill all Java Processes"
+	@$(MAKE) kill-all
 
-run:
-	java -cp $(CP_DERBY)$(SEP)$(JUNIT) clients/Main
+server:
+	@echo "Making $@"
+ifneq (,$(wildcard $(TARGET)$(DERBY_DATABASE)))
+	@cd $(TARGET);									\
+		java -cp ./$(TARGET_JAR) $(SERVER_CLASS)&
+	@sleep 2
+	@read -p "CTRL + C to exit or Enter to continue distribution"
+else
+	@echo "No database please run 'make database'"
+endif
 
-junit:
-	java -cp $(JUNIT)$(SEP)$(CP_DERBY) org.junit.runner.JUnitCore orders.OrderTest
-
-junitX:
-	java -cp $(JUNIT)$(SEP)$(CP_DERBY) org.junit.runner.JUnitCore orders.OrderTestX
-
-distributed:
-	java -cp $(CP_DERBY) middle/Server &
-	sleep 1
-	java clients/backDoor/BackDoorClient&
-	java clients/customer/CustomerClient&
-	java clients/cashier/CashierClient&
-	java clients/warehousePick/PickClient&
-	java clients/shopDisplay/DisplayClient&
-	java clients/collection/CollectClient&
+clients:
+	@echo "Making $@"
+ifneq (,$(wildcard $(TARGET)$(DERBY_DATABASE)))
+	@cd $(TARGET);									\
+		echo **Backdoor&							\
+		java -cp $(TARGET_JAR) $(BACKDOOR_CLASS)&	\
+		echo **Customer&							\
+		java -cp $(TARGET_JAR) $(CUSTOMER_CLASS)&	\
+		echo **Cashier&								\
+		java -cp $(TARGET_JAR) $(CAHSIER_CLASS)&	\
+		echo **Pick&								\
+		java -cp $(TARGET_JAR) $(PICK_CLASS)&		\
+		echo **BackDisplaydoor&						\
+		java -cp $(TARGET_JAR) $(DISPLAY_CLASS)&	\
+		echo **Collect&								\
+		java -cp $(TARGET_JAR) $(COLLECT_CLASS)&
+	@sleep 1
+	@read -p "CTRL + C to exit or Enter to continue distribution"
+else
+	@echo "No database please run 'make database'"
+endif
 
 database:
-	java -cp $(CP_DERBY) clients/Setup
+	@echo "Making $@"
+	@cd $(TARGET);		\
+		java -cp $(TARGET_JAR) $(SETUP_CLASS)
 
+kill-all:
+	@echo "Killing all Java Processes"
+	@kill $(shell ps aux | grep -i 'java' | grep -v 'grep' | awk '{print $2}')

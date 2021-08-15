@@ -70,10 +70,6 @@ package:
 	@cp -r images $(TARGET)
 	@$(MAKE) clean-local
 
-compile:
-	@echo "Compiling with Maven"
-	@mvn compile
-
 clean-all:
 	@echo "Cleaning Maven"
 	@mvn clean

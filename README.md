@@ -8,6 +8,9 @@ Maven
 
 Git Bash (If on Windows)
 
+# Info
+Make script will not work in Windows Powershell or CMD
+
 # Using Make
 `make` cleans all previous builds and creates installs the catshop program locally with dependancies
 

@@ -19,7 +19,7 @@ jobs:
     
     steps: 
       - name: Download artifacts
-        uses: actions/download-artifacts@v2
+        uses: actions/download-artifact@v2.0.10
         with:
           name: catshop
           

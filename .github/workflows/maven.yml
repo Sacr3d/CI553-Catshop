@@ -37,3 +37,9 @@ jobs:
         cp -r images staging
         ls staging
         
+    - name: Distirbute artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: catshop
+        path: staging
+        

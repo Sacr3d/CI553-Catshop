@@ -8,10 +8,7 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  create:
-    tags:
-      - '^v[0-9]+\.[0-9]+\.[0-9]+'
-
+    
 jobs:
   release:
   
@@ -22,7 +19,12 @@ jobs:
     
       - name: Retrieve version
         run: |
-          echo "TAG_NAME=$(echo ${{ github.event.head_commit.message }} | cut -d '-' -f 1)" >> $GITHUB_ENV
+          echo "TAG_NAME_TEMP=$(echo ${{ github.event.head_commit.message }} | cut -d '-' -f 1)" >> $GITHUB_ENV
+          
+      - name: Verify version
+        run: |
+           if [[ {{ env.TAG_NAME_TEMP }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo {{ env.TAG_NAME_TEMP }}; else echo "INVALID TAG"; fi
+
     
       - name: Download artifacts
         uses: actions/download-artifact@v2.0.10

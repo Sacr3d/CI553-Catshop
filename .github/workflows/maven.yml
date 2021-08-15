@@ -19,7 +19,7 @@ jobs:
     
       - name: Retrieve version
         run: |
-          echo ::set-env name=TAG_NAME::$(git log -1 --pretty=format:"%s")
+          echo "TAG_NAME=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
     
       - name: Download artifacts
         uses: actions/download-artifact@v2.0.10

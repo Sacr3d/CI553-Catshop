@@ -80,6 +80,7 @@ jobs:
         cp *.jar staging
         cp DataBase.txt staging
         cp -r images staging
+        cp -r lib staging
         ls staging
         
     - name: Distirbute artifacts

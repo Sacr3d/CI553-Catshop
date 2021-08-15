@@ -5,15 +5,15 @@ Initialised from 2019-CI553- catshop Version 1.2.1
 
 ![Java CI/CD Pipeline with Maven](https://github.com/Sacr3d/CI553-Catshop/actions/workflows/maven.yml/badge.svg)
 
-# Prerequisites
+## Prerequisites
 Maven
 
 Git Bash (If on Windows)
 
-# Info
+## Info
 Make script will not work in Windows Powershell or CMD
 
-# Using Make
+## Using Make
 `make` cleans all previous builds and creates installs the catshop program locally with dependancies
 
 `make package` cleans all previous builds and packages catshop for testing

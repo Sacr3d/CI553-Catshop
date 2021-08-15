@@ -34,8 +34,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release V$COMMIT_MESSAGE
+          tag_name: v$"${COMMIT_MESSAGE}"
+          release_name: Release V"${COMMIT_MESSAGE}"
           
       - name: Upload artifact to GitHub release
         uses: actions/upload-release-asset@v1
@@ -44,7 +44,7 @@ jobs:
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
           asset_path: ./catshop.zip
-          asset_name: catshop-v$COMMIT_MESSAGE.zip
+          asset_name: catshop-v"${COMMIT_MESSAGE}".zip
           asset_content_type: application/zip
 
   build:

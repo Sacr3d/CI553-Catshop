@@ -24,7 +24,7 @@ jobs:
           
       - name: Verify version
         run: |
-           if [[ {{ env.TAG_NAME_TEMP }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "TAG_NAME=$({{ env.TAG_NAME_TEMP }})" >> $GITHUB_ENV; fi
+           if [[ ${{ env.TAG_NAME_TEMP }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "TAG_NAME=$(echo ${{ env.TAG_NAME_TEMP }})" >> $GITHUB_ENV; fi
 
     
       - name: Download artifacts

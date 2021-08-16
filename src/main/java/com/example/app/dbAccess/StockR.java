@@ -1,4 +1,4 @@
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

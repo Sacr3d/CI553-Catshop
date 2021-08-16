@@ -1,10 +1,11 @@
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 /**
  * Apache Derby database access
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 class DerbyAccess extends DBAccess {
@@ -14,8 +15,9 @@ class DerbyAccess extends DBAccess {
 	/**
 	 * Load the Apache Derby database driver
 	 */
+	@Override
 	public void loadDriver() throws Exception {
-		Class.forName(DRIVER).newInstance();
+		Class.forName(DRIVER).getDeclaredConstructor().newInstance();
 	}
 
 	/**

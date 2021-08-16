@@ -3,7 +3,7 @@
  * @version 3.0
  */
 
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 import java.io.File;
 import java.io.FileInputStream;

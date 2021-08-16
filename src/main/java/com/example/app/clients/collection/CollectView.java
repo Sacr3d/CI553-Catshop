@@ -2,8 +2,8 @@ package com.example.app.clients.collection;
 
 import java.awt.Container;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,17 +12,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RootPaneContainer;
 
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.OrderProcessing;
 
 /**
  * Implements the Customer view.
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 
-public class CollectView implements Observer {
+public class CollectView implements Subscriber<String> {
 	private static final String COLLECT = "Collect";
 
 	private static final int H = 300; // Height of window pixels
@@ -34,7 +35,6 @@ public class CollectView implements Observer {
 	private final JScrollPane theSP = new JScrollPane();
 	private final JButton theBtCollect = new JButton(COLLECT);
 
-	private OrderProcessing theOrder = null;
 	private CollectController cont = null;
 
 	/**
@@ -48,7 +48,7 @@ public class CollectView implements Observer {
 	public CollectView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
 		try //
 		{
-			theOrder = mf.makeOrderProcessing(); // Process order
+			mf.makeOrderProcessing(); // Process order
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}
@@ -86,20 +86,37 @@ public class CollectView implements Observer {
 		cont = c;
 	}
 
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Update the view
 	 * 
-	 * @param modelC The observed model
-	 * @param arg    Specific args
+	 * @param item Specific args
 	 */
 	@Override
-	public void update(Observable modelC, Object arg) {
-		CollectModel model = (CollectModel) modelC;
-		String message = (String) arg;
+	public void onNext(String item) {
+		CollectModel model = cont.getModel();
+		String message = item;
 		theAction.setText(message);
 
 		theOutput.setText(model.getResponce());
 		theInput.requestFocus(); // Focus is here
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

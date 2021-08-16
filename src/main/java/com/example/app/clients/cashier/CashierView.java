@@ -2,8 +2,8 @@ package com.example.app.clients.cashier;
 
 import java.awt.Container;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,16 +13,17 @@ import javax.swing.JTextField;
 import javax.swing.RootPaneContainer;
 
 import com.example.app.catalogue.Basket;
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.OrderProcessing;
-import com.example.app.middle.StockReadWriter;
 
 /**
  * View of the model
  * 
  * @author M A Smith (c) June 2014
+ * @author matti
+ * @version 3.0
  */
-public class CashierView implements Observer {
+public class CashierView implements Subscriber<String> {
 	private static final int H = 300; // Height of window pixels
 	private static final int W = 400; // Width of window pixels
 
@@ -38,8 +39,6 @@ public class CashierView implements Observer {
 	private final JButton theBtBuy = new JButton(BUY);
 	private final JButton theBtBought = new JButton(BOUGHT);
 
-	private StockReadWriter theStock = null;
-	private OrderProcessing theOrder = null;
 	private CashierController cont = null;
 
 	/**
@@ -54,8 +53,8 @@ public class CashierView implements Observer {
 	public CashierView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
 		try //
 		{
-			theStock = mf.makeStockReadWriter(); // Database access
-			theOrder = mf.makeOrderProcessing(); // Process order
+			mf.makeStockReadWriter(); // Database access
+			mf.makeOrderProcessing(); // Process order
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}
@@ -110,16 +109,21 @@ public class CashierView implements Observer {
 		cont = c;
 	}
 
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Update the view
 	 * 
-	 * @param modelC The observed model
-	 * @param arg    Specific args
+	 * @param item Specific args
 	 */
 	@Override
-	public void update(Observable modelC, Object arg) {
-		CashierModel model = (CashierModel) modelC;
-		String message = (String) arg;
+	public void onNext(String item) {
+		CashierModel model = cont.getModel();
+		String message = item;
 		theAction.setText(message);
 		Basket basket = model.getBasket();
 		if (basket == null)
@@ -128,6 +132,18 @@ public class CashierView implements Observer {
 			theOutput.setText(basket.getDetails());
 
 		theInput.requestFocus(); // Focus is here
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.example.app.clients.customer;
 
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import javax.swing.ImageIcon;
 
@@ -8,7 +9,6 @@ import com.example.app.catalogue.Basket;
 import com.example.app.catalogue.Product;
 import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.OrderProcessing;
 import com.example.app.middle.StockException;
 import com.example.app.middle.StockReader;
 
@@ -16,17 +16,17 @@ import com.example.app.middle.StockReader;
  * Implements the Model of the customer client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
-public class CustomerModel extends Observable {
-	private Product theProduct = null; // Current product
+public class CustomerModel implements Publisher<String> {
 	private Basket theBasket = null; // Bought items
 
 	private String pn = ""; // Product being processed
 
 	private StockReader theStock = null;
-	private OrderProcessing theOrder = null;
 	private ImageIcon thePic = null;
+	private Subscriber<? super String> subscriber;
 
 	/*
 	 * Construct the model of the Customer
@@ -88,8 +88,7 @@ public class CustomerModel extends Observable {
 		} catch (StockException e) {
 			DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -100,8 +99,7 @@ public class CustomerModel extends Observable {
 		theBasket.clear(); // Clear s. list
 		theAction = "Enter Product Number"; // Set display
 		thePic = null; // No picture
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -114,19 +112,18 @@ public class CustomerModel extends Observable {
 	}
 
 	/**
-	 * ask for update of view callled at start
-	 */
-	private void askForUpdate() {
-		setChanged();
-		notifyObservers("START only"); // Notify
-	}
-
-	/**
 	 * Make a new Basket
 	 * 
 	 * @return an instance of a new Basket
 	 */
 	protected Basket makeBasket() {
 		return new Basket();
+	}
+
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext("Welcome"); // Notify
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.app.clients.shopDisplay;
+package com.example.app.clients.shopdisplay;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -12,11 +12,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.RootPaneContainer;
 
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
 import com.example.app.middle.OrderException;
 
@@ -25,13 +26,14 @@ import com.example.app.middle.OrderException;
  * a graphical display
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
-public class DisplayView extends Canvas implements Observer {
+public class DisplayView extends Canvas implements Subscriber<String> {
 	private static final long serialVersionUID = 1L;
-	private Font font = new Font("Monospaced", Font.BOLD, 24);
-	private int H = 300; // Height of window
-	private int W = 400; // Width of window
+	private Font catshopFont = new Font("Monospaced", Font.BOLD, 24);
+	private int h = 300; // Height of window
+	private int w = 400; // Width of window
 	private String textToDisplay = "";
 	private DisplayController cont = null;
 
@@ -48,7 +50,7 @@ public class DisplayView extends Canvas implements Observer {
 		Container cp = rpc.getContentPane(); // Content Pane
 		Container rootWindow = (Container) rpc; // Root Window
 		cp.setLayout(new BorderLayout()); // Border N E S W CENTER
-		rootWindow.setSize(W, H); // Size of Window
+		rootWindow.setSize(w, h); // Size of Window
 		rootWindow.setLocation(x, y); // Position on screen
 		rootWindow.add(this, BorderLayout.CENTER); // Add to rootwindow
 
@@ -57,29 +59,6 @@ public class DisplayView extends Canvas implements Observer {
 
 	public void setController(DisplayController c) {
 		cont = c;
-	}
-
-	/**
-	 * Called to update the display in the shop
-	 */
-	@Override
-	public void update(Observable aModelOfDisplay, Object arg) {
-		// Code to update the graphical display with the current
-		// state of the system
-		// Orders awaiting processing
-		// Orders being picked in the 'warehouse.
-		// Orders awaiting collection
-
-		try {
-			Map<String, List<Integer>> res = ((DisplayModel) aModelOfDisplay).getOrderState();
-
-			textToDisplay = "Orders in system" + "\n" + "Waiting        : " + listOfOrders(res, "Waiting") + "\n"
-					+ "Being picked   : " + listOfOrders(res, "BeingPicked") + "\n" + "To Be Collected: "
-					+ listOfOrders(res, "ToBeCollected");
-		} catch (OrderException err) {
-			textToDisplay = "\n" + "** Communication Failure **";
-		}
-		repaint(); // Draw graphically
 	}
 
 	@Override
@@ -125,11 +104,11 @@ public class DisplayView extends Canvas implements Observer {
 	public void drawActualScreen(Graphics2D g) // Re draw contents
 	{
 		g.setPaint(Color.white); // Paint Colour
-		W = getWidth();
-		H = getHeight(); // Current size
+		w = getWidth();
+		h = getHeight(); // Current size
 
-		g.setFont(font);
-		g.fill(new Rectangle2D.Double(0, 0, W, H));
+		g.setFont(catshopFont);
+		g.fill(new Rectangle2D.Double(0, 0, w, h));
 
 		// Draw state of system on display
 		String lines[] = textToDisplay.split("\n");
@@ -148,15 +127,58 @@ public class DisplayView extends Canvas implements Observer {
 	 * @return As a string a list of order numbers.
 	 */
 	private String listOfOrders(Map<String, List<Integer>> map, String key) {
-		String res = "";
+		StringBuilder res = new StringBuilder("");
 		if (map.containsKey(key)) {
 			List<Integer> orders = map.get(key);
 			for (Integer i : orders) {
-				res += " " + i;
+				res.append(" " + i);
 			}
 		} else {
-			res = "-No key-";
+			res = new StringBuilder("-No key-");
 		}
-		return res;
+		return res.toString();
+	}
+
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Update the view
+	 * 
+	 * @param item Specific args
+	 */
+	@Override
+	public void onNext(String item) {
+		// Code to update the graphical display with the current
+		// state of the system
+		// Orders awaiting processing
+		// Orders being picked in the 'warehouse.
+		// Orders awaiting collection
+
+		try {
+			Map<String, List<Integer>> res = cont.getModel().getOrderState();
+
+			textToDisplay = "Orders in system" + "\n" + "Waiting        : " + listOfOrders(res, "Waiting") + "\n"
+					+ "Being picked   : " + listOfOrders(res, "BeingPicked") + "\n" + "To Be Collected: "
+					+ listOfOrders(res, "ToBeCollected");
+		} catch (OrderException err) {
+			textToDisplay = "\n" + "** Communication Failure **";
+		}
+		repaint(); // Draw graphically
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 }

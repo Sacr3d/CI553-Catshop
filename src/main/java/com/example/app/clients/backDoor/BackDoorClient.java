@@ -1,4 +1,4 @@
-package com.example.app.clients.backDoor;
+package com.example.app.clients.backdoor;
 
 import javax.swing.JFrame;
 
@@ -30,16 +30,15 @@ public class BackDoorClient {
 
 	private static void displayGUI(MiddleFactory mf) {
 		JFrame window = new JFrame();
-
 		window.setTitle("BackDoor Client (MVC RMI)");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		BackDoorModel model = new BackDoorModel(mf);
 		BackDoorView view = new BackDoorView(window, mf, 0, 0);
 		BackDoorController cont = new BackDoorController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Display Screen
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.app.clients.backDoor;
+package com.example.app.clients.backdoor;
 
 /**
  * The BackDoor Controller
@@ -7,8 +7,11 @@ package com.example.app.clients.backDoor;
  */
 
 public class BackDoorController {
+	public BackDoorModel getModel() {
+		return model;
+	}
+
 	private BackDoorModel model = null;
-	private BackDoorView view = null;
 
 	/**
 	 * Constructor
@@ -17,7 +20,6 @@ public class BackDoorController {
 	 * @param view  The view from which the interaction came
 	 */
 	public BackDoorController(BackDoorModel model, BackDoorView view) {
-		this.view = view;
 		this.model = model;
 	}
 

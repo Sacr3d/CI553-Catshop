@@ -5,8 +5,8 @@
 
 package com.example.app.middle;
 
-import com.example.app.dbAccess.StockR;
-import com.example.app.dbAccess.StockRW;
+import com.example.app.dbaccess.StockR;
+import com.example.app.dbaccess.StockRW;
 import com.example.app.orders.Order;
 
 /**

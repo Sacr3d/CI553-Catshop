@@ -4,11 +4,16 @@ package com.example.app.clients.customer;
  * The Customer Controller
  * 
  * @author M A Smith (c) June 2014
+ * @author matti
+ * @version 3.0
  */
 
 public class CustomerController {
 	private CustomerModel model = null;
-	private CustomerView view = null;
+
+	public CustomerModel getModel() {
+		return model;
+	}
 
 	/**
 	 * Constructor
@@ -17,7 +22,6 @@ public class CustomerController {
 	 * @param view  The view from which the interaction came
 	 */
 	public CustomerController(CustomerModel model, CustomerView view) {
-		this.view = view;
 		this.model = model;
 	}
 

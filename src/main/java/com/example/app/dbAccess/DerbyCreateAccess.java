@@ -1,10 +1,11 @@
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 /**
  * Implements management of an Apache Derby database. that is too be created
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 class DerbyCreateAccess extends DBAccess {
@@ -12,7 +13,7 @@ class DerbyCreateAccess extends DBAccess {
 	private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 
 	public void loadDriver() throws Exception {
-		Class.forName(DRIVER).newInstance();
+		Class.forName(DRIVER).getDeclaredConstructor().newInstance();
 	}
 
 	public String urlOfDatabase() {

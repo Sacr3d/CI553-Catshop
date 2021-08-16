@@ -1,4 +1,4 @@
-package com.example.app.clients.shopDisplay;
+package com.example.app.clients.shopdisplay;
 
 import javax.swing.JFrame;
 
@@ -10,7 +10,8 @@ import com.example.app.middle.RemoteMiddleFactory;
  * The standalone shop Display Client.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 public class DisplayClient {
 	public static void main(String args[]) {
@@ -31,14 +32,14 @@ public class DisplayClient {
 		JFrame window = new JFrame();
 
 		window.setTitle("Pick Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		DisplayModel model = new DisplayModel(mf);
 		DisplayView view = new DisplayView(window, mf, 0, 0);
 		DisplayController cont = new DisplayController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Display Screen
 	}
 }

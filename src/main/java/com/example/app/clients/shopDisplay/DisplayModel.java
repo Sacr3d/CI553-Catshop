@@ -1,8 +1,9 @@
-package com.example.app.clients.shopDisplay;
+package com.example.app.clients.shopdisplay;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
@@ -18,11 +19,14 @@ import com.example.app.middle.OrderProcessing;
  * Implements the Model of the display client
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
-public class DisplayModel extends Observable {
+public class DisplayModel implements Publisher<String> {
+
 	private OrderProcessing theOrder = null;
+	private Subscriber<? super String> subscriber;
 
 	/**
 	 * Set up initial connection to the order processing system
@@ -37,7 +41,7 @@ public class DisplayModel extends Observable {
 			// Serious error in system (Should not occure)
 			DEBUG.error("ModelOfDisplay: " + e.getMessage());
 		}
-		new Thread(() -> backgroundRun()).start();
+		new Thread(this::backgroundRun).start();
 
 	}
 
@@ -45,15 +49,17 @@ public class DisplayModel extends Observable {
 	 * Run as a thread in background to continually update the display
 	 */
 	public void backgroundRun() {
-		while (true) // Forever
+		boolean interrupted = false;
+		while (!interrupted) // Forever
 		{
 			try {
 				Thread.sleep(2000);
 				DEBUG.trace("ModelOfDisplay call view");
-				setChanged();
-				notifyObservers();
+				subscriber.onNext("");
 			} catch (InterruptedException e) {
-				DEBUG.error("%s\n%s\n", "ModelOfDisplay.run()", e.getMessage());
+				DEBUG.error("%s%n%s%n", "ModelOfDisplay.run()", e.getMessage());
+				interrupted = true;
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -62,5 +68,12 @@ public class DisplayModel extends Observable {
 	// when it is told that the view has changed
 	public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
 		return theOrder.getOrderState();
+	}
+
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext(""); // Notify
 	}
 }

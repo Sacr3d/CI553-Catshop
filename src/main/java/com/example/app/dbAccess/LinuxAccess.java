@@ -1,14 +1,15 @@
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 /**
  * Implements management of an mySQL database on Linux.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 class LinuxAccess extends DBAccess {
 	public void loadDriver() throws Exception {
-		Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+		Class.forName("org.gjt.mm.mysql.Driver").getDeclaredConstructor().newInstance();
 	}
 
 	public String urlOfDatabase() {

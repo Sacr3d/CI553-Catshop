@@ -1,9 +1,9 @@
-package com.example.app.clients.backDoor;
+package com.example.app.clients.backdoor;
 
 import java.awt.Container;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,8 +12,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RootPaneContainer;
 
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.StockReadWriter;
 
 /**
  * Implements the Customer view.
@@ -22,7 +22,7 @@ import com.example.app.middle.StockReadWriter;
  * @version 1.0
  */
 
-public class BackDoorView implements Observer {
+public class BackDoorView implements Subscriber<String> {
 	private static final String RESTOCK = "Add";
 	private static final String CLEAR = "Clear";
 	private static final String QUERY = "Query";
@@ -39,7 +39,6 @@ public class BackDoorView implements Observer {
 	private final JButton theBtRStock = new JButton(RESTOCK);
 	private final JButton theBtQuery = new JButton(QUERY);
 
-	private StockReadWriter theStock = null;
 	private BackDoorController cont = null;
 
 	/**
@@ -53,7 +52,7 @@ public class BackDoorView implements Observer {
 	public BackDoorView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
 		try //
 		{
-			theStock = mf.makeStockReadWriter(); // Database access
+			mf.makeStockReadWriter(); // Database access
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}
@@ -105,20 +104,37 @@ public class BackDoorView implements Observer {
 		cont = c;
 	}
 
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Update the view
 	 * 
-	 * @param modelC The observed model
-	 * @param arg    Specific args
+	 * @param item Specific args
 	 */
 	@Override
-	public void update(Observable modelC, Object arg) {
-		BackDoorModel model = (BackDoorModel) modelC;
-		String message = (String) arg;
+	public void onNext(String item) {
+		BackDoorModel model = cont.getModel();
+		String message = item;
 		theAction.setText(message);
 
 		theOutput.setText(model.getBasket().getDetails());
 		theInput.requestFocus();
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -1,13 +1,14 @@
 package com.example.app;
 
 import java.awt.Dimension;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 
 import com.example.app.clients.PosOnScrn;
-import com.example.app.clients.backDoor.BackDoorController;
-import com.example.app.clients.backDoor.BackDoorModel;
-import com.example.app.clients.backDoor.BackDoorView;
+import com.example.app.clients.backdoor.BackDoorController;
+import com.example.app.clients.backdoor.BackDoorModel;
+import com.example.app.clients.backdoor.BackDoorView;
 import com.example.app.clients.cashier.CashierController;
 import com.example.app.clients.cashier.CashierModel;
 import com.example.app.clients.cashier.CashierView;
@@ -17,57 +18,62 @@ import com.example.app.clients.collection.CollectView;
 import com.example.app.clients.customer.CustomerController;
 import com.example.app.clients.customer.CustomerModel;
 import com.example.app.clients.customer.CustomerView;
-import com.example.app.clients.shopDisplay.DisplayController;
-import com.example.app.clients.shopDisplay.DisplayModel;
-import com.example.app.clients.shopDisplay.DisplayView;
-import com.example.app.clients.warehousePick.PickController;
-import com.example.app.clients.warehousePick.PickModel;
-import com.example.app.clients.warehousePick.PickView;
+import com.example.app.clients.shopdisplay.DisplayController;
+import com.example.app.clients.shopdisplay.DisplayModel;
+import com.example.app.clients.shopdisplay.DisplayView;
+import com.example.app.clients.warehousepick.PickController;
+import com.example.app.clients.warehousepick.PickModel;
+import com.example.app.clients.warehousepick.PickView;
 import com.example.app.middle.LocalMiddleFactory;
 import com.example.app.middle.MiddleFactory;
+import com.example.app.debug.DEBUG;
 
 /**
  * Starts all the clients as a single application. Good for testing the system
  * using a single application but no use of RMI.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 class Main {
 	// Change to false to reduce the number of duplicated clients
 
-	private final static boolean many = false; // Many clients? (Or minimal clients)
+	private static final boolean MANY = false; // Many clients? (Or minimal clients)
 
-	public static void main(String args[]) {
-		new Main().begin();
+	public static void main(String[] args) {
+
+		new Main().begin(args);
 	}
 
 	/**
 	 * Starts test system (Non distributed)
 	 */
-	public void begin() {
-		// DEBUG.set(true); /* Lots of debug info */
+	public void begin(String[] args) {
+		if (Arrays.asList(args).contains("log"))
+			DEBUG.set(true);
+
 		MiddleFactory mlf = new LocalMiddleFactory(); // Direct access
 
-		startCustomerGUI_MVC(mlf);
-		if (many)
-			startCustomerGUI_MVC(mlf);
-		startCashierGUI_MVC(mlf);
-		startCashierGUI_MVC(mlf);
-		startBackDoorGUI_MVC(mlf);
-		if (many)
-			startPickGUI_MVC(mlf);
-		startPickGUI_MVC(mlf);
-		startDisplayGUI_MVC(mlf);
-		if (many)
-			startDisplayGUI_MVC(mlf);
-		startCollectionGUI_MVC(mlf);
+		startCustomerGUIMVC(mlf);
+		if (MANY)
+			startCustomerGUIMVC(mlf);
+		startCashierGUIMVC(mlf);
+		startCashierGUIMVC(mlf);
+		startBackDoorGUIMVC(mlf);
+		if (MANY)
+			startPickGUIMVC(mlf);
+		startPickGUIMVC(mlf);
+		startDisplayGUIMVC(mlf);
+		if (MANY)
+			startDisplayGUIMVC(mlf);
+		startCollectionGUIMVC(mlf);
 	}
 
-	public void startCustomerGUI_MVC(MiddleFactory mlf) {
+	public static void startCustomerGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 		window.setTitle("Customer Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		CustomerModel model = new CustomerModel(mlf);
@@ -75,7 +81,7 @@ class Main {
 		CustomerController cont = new CustomerController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view);
 		window.setVisible(true); // start Screen
 	}
 
@@ -84,10 +90,10 @@ class Main {
 	 * 
 	 * @param mlf A factory to create objects to access the stock list
 	 */
-	public void startCashierGUI_MVC(MiddleFactory mlf) {
+	public static void startCashierGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 		window.setTitle("Cashier Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		CashierModel model = new CashierModel(mlf);
@@ -95,16 +101,15 @@ class Main {
 		CashierController cont = new CashierController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Make window visible
-		model.askForUpdate(); // Initial display
 	}
 
-	public void startBackDoorGUI_MVC(MiddleFactory mlf) {
+	public static void startBackDoorGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 
 		window.setTitle("BackDoor Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		BackDoorModel model = new BackDoorModel(mlf);
@@ -112,15 +117,15 @@ class Main {
 		BackDoorController cont = new BackDoorController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Make window visible
 	}
 
-	public void startPickGUI_MVC(MiddleFactory mlf) {
+	public static void startPickGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 
 		window.setTitle("Pick Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		PickModel model = new PickModel(mlf);
@@ -128,15 +133,15 @@ class Main {
 		PickController cont = new PickController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Make window visible
 	}
 
-	public void startDisplayGUI_MVC(MiddleFactory mlf) {
+	public static void startDisplayGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 
 		window.setTitle("Display Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		DisplayModel model = new DisplayModel(mlf);
@@ -144,15 +149,15 @@ class Main {
 		DisplayController cont = new DisplayController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Make window visible
 	}
 
-	public void startCollectionGUI_MVC(MiddleFactory mlf) {
+	public static void startCollectionGUIMVC(MiddleFactory mlf) {
 		JFrame window = new JFrame();
 
 		window.setTitle("Collect Client MVC");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		Dimension pos = PosOnScrn.getPos();
 
 		CollectModel model = new CollectModel(mlf);
@@ -160,7 +165,7 @@ class Main {
 		CollectController cont = new CollectController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Make window visible
 	}
 

@@ -5,6 +5,10 @@ Initialised from 2019-CI553- catshop Version 1.2.1
 
 ![Java CI/CD Pipeline with Maven](https://github.com/Sacr3d/CI553-Catshop/actions/workflows/maven.yml/badge.svg)
 
+## JAVA
+
+Java 11
+
 ## Prerequisites
 Maven
 

@@ -4,11 +4,16 @@ package com.example.app.clients.cashier;
  * The Cashier Controller
  * 
  * @author M A Smith (c) June 2014
+ * @author matti
+ * @version 3.0
  */
 
 public class CashierController {
 	private CashierModel model = null;
-	private CashierView view = null;
+
+	public CashierModel getModel() {
+		return model;
+	}
 
 	/**
 	 * Constructor
@@ -17,7 +22,6 @@ public class CashierController {
 	 * @param view  The view from which the interaction came
 	 */
 	public CashierController(CashierModel model, CashierView view) {
-		this.view = view;
 		this.model = model;
 	}
 

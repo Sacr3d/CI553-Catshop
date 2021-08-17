@@ -2,19 +2,25 @@ package com.example.app;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import com.example.app.clients.Setup;
+import com.example.app.middle.LocalMiddleFactory;
+import com.example.app.middle.MiddleFactory;
 
 /**
- * Testing the database creation
+ * Testing the clients capabilities
  * 
  * @author matti
  * @version 1.0
  */
-class DatabaseTest {
+class ClientsTest {
+
+	MiddleFactory mlf = new LocalMiddleFactory(); // Direct access
 
 	/**
 	 * Generate database.txt and start Setup.Main() to generate the database
@@ -23,13 +29,13 @@ class DatabaseTest {
 	 */
 	@BeforeAll
 	public static void setUp() throws Exception {
-
 		String[] emtpyArgs = { "" };
 
 		String msg = "Derby";
 		Files.write(Paths.get("./DataBase.txt"), msg.getBytes());
 
 		Setup.main(emtpyArgs);
+
 	}
 
 	/**
@@ -43,14 +49,22 @@ class DatabaseTest {
 	}
 
 	/**
-	 * Create the Derby database and ensure drivers are installed
-	 * 
-	 * @assert That the catshop.db directory was created
-	 * 
+	 * Place holder test
 	 */
 	@Test
-	void dataBaseCreation() {
-		Assertions.assertTrue(Paths.get("./catshop.db").toFile().isDirectory());
+	void allClientsRun() {
+
+		try {
+			Main.startCustomerGUIMVC(mlf);
+			Main.startCashierGUIMVC(mlf);
+			Main.startBackDoorGUIMVC(mlf);
+			Main.startPickGUIMVC(mlf);
+			Main.startDisplayGUIMVC(mlf);
+			Main.startCollectionGUIMVC(mlf);
+		} catch (Exception e) {
+			Assertions.fail(e.getMessage());
+		}
+
 	}
 
 }

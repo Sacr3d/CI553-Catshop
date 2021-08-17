@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import javax.swing.ImageIcon;
 
 import com.example.app.catalogue.Product;
-import com.example.app.dbAccess.StockRW;
+import com.example.app.dbaccess.StockRW;
 import com.example.app.middle.StockException;
 
 // There can only be 1 ResultSet opened per statement
@@ -30,7 +30,7 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
 	 * 
 	 * @param url of remote object
 	 * @throws java.rmi.RemoteException if issue
-	 * @throws StockException    if issue
+	 * @throws StockException           if issue
 	 */
 	public R_StockRW(String url) throws RemoteException, StockException {
 		aStockRW = new StockRW();

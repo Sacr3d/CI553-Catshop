@@ -4,7 +4,8 @@ package com.example.app.debug;
  * Print debug information about the running program
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 public class DEBUG {
 	private static boolean debug = false;

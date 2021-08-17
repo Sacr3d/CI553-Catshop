@@ -7,7 +7,7 @@
 
 	<groupId>com.example.app</groupId>
 	<artifactId>2021-CI553-catshop</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>2.0-SNAPSHOT</version>
 	<name>2021-CI553-catshop</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
@@ -19,24 +19,19 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.7.0</version>
 			<scope>test</scope>
 		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.14.2.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -126,7 +121,7 @@
 								<include>**/Main*</include>
 								<include>**/middle/**</include>
 								<include>**/clients/**</include>
-								<include>**/dbAccess/**</include>
+								<include>**/dbaccess/**</include>
 								<include>**/debug/**</include>
 								<include>**/catalogue/**</include>
 								<include>**/orders/**</include>
@@ -150,7 +145,7 @@
 							<classifier>setup</classifier>
 							<includes>
 								<include>**/Setup*</include>
-								<include>**/dbAccess/**</include>
+								<include>**/dbaccess/**</include>
 								<include>**/debug/**</include>
 							</includes>
 							<archive>

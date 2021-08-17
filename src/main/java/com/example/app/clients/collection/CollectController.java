@@ -4,11 +4,16 @@ package com.example.app.clients.collection;
  * The Collection Controller
  * 
  * @author M A Smith (c) June 2014
+ * @author matti
+ * @version 3.0
  */
 
 public class CollectController {
 	private CollectModel model = null;
-	private CollectView view = null;
+
+	public CollectModel getModel() {
+		return model;
+	}
 
 	/**
 	 * Constructor
@@ -17,7 +22,6 @@ public class CollectController {
 	 * @param view  The view from which the interaction came
 	 */
 	public CollectController(CollectModel model, CollectView view) {
-		this.view = view;
 		this.model = model;
 	}
 

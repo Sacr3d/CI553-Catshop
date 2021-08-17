@@ -1,4 +1,4 @@
-package com.example.app.clients.warehousePick;
+package com.example.app.clients.warehousepick;
 
 import javax.swing.JFrame;
 
@@ -10,7 +10,8 @@ import com.example.app.middle.RemoteMiddleFactory;
  * The standalone warehouse Pick Client.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 public class PickClient {
 	public static void main(String args[]) {
@@ -38,7 +39,7 @@ public class PickClient {
 		PickController cont = new PickController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Display Screen
 	}
 }

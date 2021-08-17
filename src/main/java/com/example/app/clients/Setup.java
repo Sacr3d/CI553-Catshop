@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.example.app.dbAccess.DBAccess;
-import com.example.app.dbAccess.DBAccessFactory;
+import com.example.app.dbaccess.DBAccess;
+import com.example.app.dbaccess.DBAccessFactory;
 
 /**
  * Repopulate the database with test data

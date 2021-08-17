@@ -1,4 +1,4 @@
-package com.example.app.dbAccess;
+package com.example.app.dbaccess;
 
 /**
  * Implements management of a Microsoft Access database.

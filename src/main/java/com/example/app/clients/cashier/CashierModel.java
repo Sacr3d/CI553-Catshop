@@ -1,6 +1,7 @@
 package com.example.app.clients.cashier;
 
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import com.example.app.catalogue.Basket;
 import com.example.app.catalogue.Product;
@@ -17,12 +18,12 @@ import com.example.app.middle.StockReadWriter;
  * @author Mike Smith University of Brighton
  * @version 1.0
  */
-public class CashierModel extends Observable {
+public class CashierModel implements Publisher<String> {
 	private enum State {
-		process, checked
+		PROCESS, CHECKED
 	}
 
-	private State theState = State.process; // Current state
+	private State theState = State.PROCESS; // Current state
 	private Product theProduct = null; // Current product
 	private Basket theBasket = null; // Bought items
 
@@ -30,6 +31,7 @@ public class CashierModel extends Observable {
 
 	private StockReadWriter theStock = null;
 	private OrderProcessing theOrder = null;
+	private Subscriber<? super String> subscriber;
 
 	/**
 	 * Construct the model of the Cashier
@@ -45,7 +47,7 @@ public class CashierModel extends Observable {
 		} catch (Exception e) {
 			DEBUG.error("CashierModel.constructor\n%s", e.getMessage());
 		}
-		theState = State.process; // Current state
+		theState = State.PROCESS; // Current state
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class CashierModel extends Observable {
 	 */
 	public void doCheck(String productNum) {
 		String theAction = "";
-		theState = State.process; // State process
+		theState = State.PROCESS; // State process
 		pn = productNum.trim(); // Product no.
 		int amount = 1; // & quantity
 		try {
@@ -80,7 +82,7 @@ public class CashierModel extends Observable {
 									pr.getQuantity()); // quantity
 					theProduct = pr; // Remember prod.
 					theProduct.setQuantity(amount); // & quantity
-					theState = State.checked; // OK await BUY
+					theState = State.CHECKED; // OK await BUY
 				} else { // F
 					theAction = // Not in Stock
 							pr.getDescription() + " not in stock";
@@ -90,11 +92,10 @@ public class CashierModel extends Observable {
 						"Unknown product number " + pn; // product no.
 			}
 		} catch (StockException e) {
-			DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
+			DEBUG.error("%s%n%s", "CashierModel.doCheck", e.getMessage());
 			theAction = e.getMessage();
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -102,9 +103,8 @@ public class CashierModel extends Observable {
 	 */
 	public void doBuy() {
 		String theAction = "";
-		int amount = 1; // & quantity
 		try {
-			if (theState != State.checked) // Not checked
+			if (theState != State.CHECKED) // Not checked
 			{ // with customer
 				theAction = "Check if OK with customer first";
 			} else {
@@ -126,9 +126,8 @@ public class CashierModel extends Observable {
 			DEBUG.error("%s\n%s", "CashierModel.doBuy", e.getMessage());
 			theAction = e.getMessage();
 		}
-		theState = State.process; // All Done
-		setChanged();
-		notifyObservers(theAction);
+		theState = State.PROCESS; // All Done
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -136,7 +135,6 @@ public class CashierModel extends Observable {
 	 */
 	public void doBought() {
 		String theAction = "";
-		int amount = 1; // & quantity
 		try {
 			if (theBasket != null && theBasket.size() >= 1) // items > 1
 			{ // T
@@ -144,23 +142,14 @@ public class CashierModel extends Observable {
 				theBasket = null; // reset
 			} //
 			theAction = "Next customer"; // New Customer
-			theState = State.process; // All Done
+			theState = State.PROCESS; // All Done
 			theBasket = null;
 		} catch (OrderException e) {
 			DEBUG.error("%s\n%s", "CashierModel.doCancel", e.getMessage());
 			theAction = e.getMessage();
 		}
 		theBasket = null;
-		setChanged();
-		notifyObservers(theAction); // Notify
-	}
-
-	/**
-	 * ask for update of view callled at start of day or after system reset
-	 */
-	public void askForUpdate() {
-		setChanged();
-		notifyObservers("Welcome");
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -185,5 +174,15 @@ public class CashierModel extends Observable {
 	 */
 	protected Basket makeBasket() {
 		return new Basket();
+	}
+
+	/**
+	 * ask for update of view callled at start of day or after system reset
+	 */
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext("Welcome"); // Notify
 	}
 }

@@ -1,6 +1,7 @@
 package com.example.app.clients.collection;
 
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
@@ -10,13 +11,14 @@ import com.example.app.middle.OrderProcessing;
  * Implements the Model of the collection client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 
-public class CollectModel extends Observable {
-	private String theAction = "";
+public class CollectModel implements Publisher<String> {
 	private String theOutput = "";
 	private OrderProcessing theOrder = null;
+	private Subscriber<? super String> subscriber;
 
 	/*
 	 * Construct the model of the Collection client
@@ -45,6 +47,7 @@ public class CollectModel extends Observable {
 		} catch (Exception err) {
 			// Convert invalid order number to 0
 		}
+		String theAction;
 		try {
 			boolean ok = theOrder.informOrderCollected(orderNum);
 			if (ok) {
@@ -55,11 +58,10 @@ public class CollectModel extends Observable {
 				theOutput = "No such order to be collected : " + orderNumber;
 			}
 		} catch (Exception e) {
-			theOutput = String.format("%s\n%s", "Error connection to order processing system", e.getMessage());
+			theOutput = String.format("%s%n%s", "Error connection to order processing system", e.getMessage());
 			theAction = "!!!Error";
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -69,6 +71,13 @@ public class CollectModel extends Observable {
 	 */
 	public String getResponce() {
 		return theOutput;
+	}
+
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext(""); // Notify
 	}
 
 }

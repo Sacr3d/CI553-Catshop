@@ -1,6 +1,7 @@
-package com.example.app.clients.backDoor;
+package com.example.app.clients.backdoor;
 
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 
 import com.example.app.catalogue.Basket;
 import com.example.app.catalogue.Product;
@@ -15,11 +16,12 @@ import com.example.app.middle.StockReadWriter;
  * @author Mike Smith University of Brighton
  * @version 1.0
  */
-public class BackDoorModel extends Observable {
+public class BackDoorModel implements Publisher<String> {
 	private Basket theBasket = null; // Bought items
 	private String pn = ""; // Product being processed
 
 	private StockReadWriter theStock = null;
+	private Subscriber<? super String> subscriber;
 
 	/*
 	 * Construct the model of the back door client
@@ -80,8 +82,7 @@ public class BackDoorModel extends Observable {
 		} catch (StockException e) {
 			theAction = e.getMessage();
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -104,8 +105,7 @@ public class BackDoorModel extends Observable {
 					throw new NumberFormatException("-ve");
 			} catch (Exception err) {
 				theAction = "Invalid quantity";
-				setChanged();
-				notifyObservers(theAction);
+				subscriber.onNext(theAction);
 				return;
 			}
 
@@ -122,8 +122,7 @@ public class BackDoorModel extends Observable {
 		} catch (StockException e) {
 			theAction = e.getMessage();
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -133,8 +132,7 @@ public class BackDoorModel extends Observable {
 		String theAction = "";
 		theBasket.clear(); // Clear s. list
 		theAction = "Enter Product Number"; // Set display
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
 	}
 
 	/**
@@ -144,5 +142,12 @@ public class BackDoorModel extends Observable {
 	 */
 	protected Basket makeBasket() {
 		return new Basket();
+	}
+
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext(""); // Notify
 	}
 }

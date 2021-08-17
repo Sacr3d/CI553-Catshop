@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import javax.swing.ImageIcon;
 
 import com.example.app.catalogue.Product;
-import com.example.app.dbAccess.StockR;
+import com.example.app.dbaccess.StockR;
 import com.example.app.middle.StockException;
 
 // There can only be 1 ResultSet opened per statement

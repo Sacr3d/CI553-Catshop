@@ -10,7 +10,8 @@ import com.example.app.middle.RemoteMiddleFactory;
  * The standalone Collection Client.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 public class CollectClient {
@@ -32,14 +33,14 @@ public class CollectClient {
 		JFrame window = new JFrame();
 
 		window.setTitle("Collection Client (MVC RMI)");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		CollectModel model = new CollectModel(mf);
 		CollectView view = new CollectView(window, mf, 0, 0);
 		CollectController cont = new CollectController(model, view);
 		view.setController(cont);
 
-		model.addObserver(view); // Add observer to the model
+		model.subscribe(view); // Add observer to the model
 		window.setVisible(true); // Display Screen
 	}
 }

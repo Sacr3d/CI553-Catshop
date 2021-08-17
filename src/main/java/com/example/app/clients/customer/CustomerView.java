@@ -2,8 +2,8 @@ package com.example.app.clients.customer;
 
 import java.awt.Container;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,17 +14,18 @@ import javax.swing.JTextField;
 import javax.swing.RootPaneContainer;
 
 import com.example.app.clients.Picture;
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.StockReader;
 
 /**
  * Implements the Customer view.
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 
-public class CustomerView implements Observer {
+public class CustomerView implements Subscriber<String> {
 	class Name // Names of buttons
 	{
 		public static final String CHECK = "Check";
@@ -42,7 +43,6 @@ public class CustomerView implements Observer {
 	private final JButton theBtClear = new JButton(Name.CLEAR);
 
 	private Picture thePicture = new Picture(80, 80);
-	private StockReader theStock = null;
 	private CustomerController cont = null;
 
 	/**
@@ -53,11 +53,10 @@ public class CustomerView implements Observer {
 	 * @param x   x-cordinate of position of window on screen
 	 * @param y   y-cordinate of position of window on screen
 	 */
-
 	public CustomerView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
 		try //
 		{
-			theStock = mf.makeStockReader(); // Database Access
+			mf.makeStockReader();
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}
@@ -97,7 +96,7 @@ public class CustomerView implements Observer {
 		cp.add(thePicture); // Add to canvas
 		thePicture.clear();
 
-		rootWindow.setVisible(true); // Make visible);
+		rootWindow.setVisible(true); // Make visible
 		theInput.requestFocus(); // Focus is here
 	}
 
@@ -107,21 +106,25 @@ public class CustomerView implements Observer {
 	 * 
 	 * @param c The controller
 	 */
-
 	public void setController(CustomerController c) {
 		cont = c;
+	}
+
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
 	 * Update the view
 	 * 
-	 * @param modelC The observed model
-	 * @param arg    Specific args
+	 * @param item Specific args
 	 */
-
-	public void update(Observable modelC, Object arg) {
-		CustomerModel model = (CustomerModel) modelC;
-		String message = (String) arg;
+	@Override
+	public void onNext(String item) {
+		CustomerModel model = cont.getModel();
+		String message = item;
 		theAction.setText(message);
 		ImageIcon image = model.getPicture(); // Image of product
 		if (image == null) {
@@ -131,6 +134,18 @@ public class CustomerView implements Observer {
 		}
 		theOutput.setText(model.getBasket().getDetails());
 		theInput.requestFocus(); // Focus is here
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -1,9 +1,9 @@
-package com.example.app.clients.warehousePick;
+package com.example.app.clients.warehousepick;
 
 import java.awt.Container;
 import java.awt.Font;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,17 +12,18 @@ import javax.swing.JTextArea;
 import javax.swing.RootPaneContainer;
 
 import com.example.app.catalogue.Basket;
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.middle.OrderProcessing;
 
 /**
  * Implements the Customer view.
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 
-public class PickView implements Observer {
+public class PickView implements Subscriber<String> {
 	private static final String PICKED = "Picked";
 
 	private static final int H = 300; // Height of window pixels
@@ -32,8 +33,6 @@ public class PickView implements Observer {
 	private final JTextArea theOutput = new JTextArea();
 	private final JScrollPane theSP = new JScrollPane();
 	private final JButton theBtPicked = new JButton(PICKED);
-
-	private OrderProcessing theOrder = null;
 
 	private PickController cont = null;
 
@@ -48,7 +47,7 @@ public class PickView implements Observer {
 	public PickView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
 		try //
 		{
-			theOrder = mf.makeOrderProcessing(); // Process order
+			mf.makeOrderProcessing();
 		} catch (Exception e) {
 			System.out.println("Exception: " + e.getMessage());
 		}
@@ -81,16 +80,21 @@ public class PickView implements Observer {
 		cont = c;
 	}
 
+	@Override
+	public void onSubscribe(Subscription subscription) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Update the view
 	 * 
-	 * @param modelC The observed model
-	 * @param arg    Specific args
+	 * @param item Specific args
 	 */
 	@Override
-	public void update(Observable modelC, Object arg) {
-		PickModel model = (PickModel) modelC;
-		String message = (String) arg;
+	public void onNext(String item) {
+		PickModel model = cont.getModel();
+		String message = item;
 		theAction.setText(message);
 
 		Basket basket = model.getBasket();
@@ -99,6 +103,19 @@ public class PickView implements Observer {
 		} else {
 			theOutput.setText("");
 		}
+	}
+
+	@Override
+	public void onError(Throwable throwable) {
+
+		DEBUG.error(Thread.currentThread().getName() + " | ERROR = " + throwable.getClass().getSimpleName() + " | ",
+				throwable.getMessage());
+	}
+
+	@Override
+	public void onComplete() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

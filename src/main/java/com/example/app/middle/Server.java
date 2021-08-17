@@ -15,8 +15,8 @@ import com.example.app.remote.R_StockRW;
  * @version 2.0
  */
 
-class Server {
-	public static void main(String args[]) {
+public class Server {
+	public static void main(String[] args) {
 		String stockR = args.length < 1 // URL of stock R
 				? Names.STOCK_R // default location
 				: args[0]; // supplied location

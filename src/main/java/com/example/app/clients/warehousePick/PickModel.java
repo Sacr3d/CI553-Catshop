@@ -1,6 +1,7 @@
-package com.example.app.clients.warehousePick;
+package com.example.app.clients.warehousepick;
 
-import java.util.Observable;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.example.app.catalogue.Basket;
@@ -8,22 +9,22 @@ import com.example.app.debug.DEBUG;
 import com.example.app.middle.MiddleFactory;
 import com.example.app.middle.OrderException;
 import com.example.app.middle.OrderProcessing;
-import com.example.app.middle.StockReadWriter;
 
 /**
  * Implements the Model of the warehouse pick client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
-public class PickModel extends Observable {
+public class PickModel implements Publisher<String> {
 	private AtomicReference<Basket> theBasket = new AtomicReference<>();
 
-	private StockReadWriter theStock = null;
 	private OrderProcessing theOrder = null;
-	private String theAction = "";
 
 	private StateOf worker = new StateOf();
+
+	private Subscriber<? super String> subscriber;
 
 	/*
 	 * Construct the model of the warehouse pick client
@@ -33,7 +34,7 @@ public class PickModel extends Observable {
 	public PickModel(MiddleFactory mf) {
 		try //
 		{
-			theStock = mf.makeStockReadWriter(); // Database access
+			mf.makeStockReadWriter(); // Database access
 			theOrder = mf.makeOrderProcessing(); // Process order
 		} catch (Exception e) {
 			DEBUG.error("CustomerModel.constructor\n%s", e.getMessage());
@@ -41,7 +42,7 @@ public class PickModel extends Observable {
 
 		theBasket.set(null); // Initial Basket
 		// Start a background check to see when a new order can be picked
-		new Thread(() -> checkForNewOrder()).start();
+		new Thread(this::checkForNewOrder).start();
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class PickModel extends Observable {
 		 */
 		public synchronized boolean claim() // Semaphore
 		{
-			return held ? false : (held = true);
+			return !held;
 		}
 
 		/**
@@ -74,14 +75,19 @@ public class PickModel extends Observable {
 	/**
 	 * Method run in a separate thread to check if there is a new order waiting to
 	 * be picked and we have nothing to do.
+	 * 
 	 */
 	private void checkForNewOrder() {
-		while (true) {
+		boolean interrupted = false;
+		while (!interrupted) {
 			try {
+				Thread.sleep(2000);
+
 				boolean isFree = worker.claim(); // Are we free
 				if (isFree) // T
 				{ //
 					Basket sb = theOrder.getOrderToPick(); // Order
+					String theAction;
 					if (sb != null) // Order to pick
 					{ // T
 						theBasket.set(sb); // Working on
@@ -90,13 +96,13 @@ public class PickModel extends Observable {
 						worker.free(); // Free
 						theAction = ""; //
 					}
-					setChanged();
-					notifyObservers(theAction);
-				} //
-				Thread.sleep(2000); // idle
+					subscriber.onNext(theAction);
+				}
 			} catch (Exception e) {
 				DEBUG.error("%s\n%s", // Eek!
 						"BackGroundCheck.run()\n%s", e.getMessage());
+				interrupted = true;
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -112,6 +118,7 @@ public class PickModel extends Observable {
 
 	/**
 	 * Process a picked Order
+	 * 
 	 */
 	public void doPick() {
 		String theAction = "";
@@ -127,14 +134,19 @@ public class PickModel extends Observable {
 			} else { // F
 				theAction = "No order to pick"; // Not picked order
 			}
-			setChanged();
-			notifyObservers(theAction);
+			subscriber.onNext(theAction);
 		} catch (OrderException e) // Error
 		{ // Of course
 			DEBUG.error("PickModel.doPick()\n%s\n", // should not
 					e.getMessage()); // happen
 		}
-		setChanged();
-		notifyObservers(theAction);
+		subscriber.onNext(theAction);
+	}
+
+	@Override
+	public void subscribe(Subscriber<? super String> subscriber) {
+		this.subscriber = subscriber;
+		// When all values or emitted, call complete.
+		subscriber.onNext(""); // Notify
 	}
 }

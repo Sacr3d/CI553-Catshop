@@ -13,7 +13,8 @@ import javax.swing.ImageIcon;
  * A class to display a picture in a client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.0
  */
 public class Picture extends Canvas {
 	private static final long serialVersionUID = 1;
@@ -41,11 +42,13 @@ public class Picture extends Canvas {
 		repaint(); // Force repaint
 	}
 
+	@Override
 	public void paint(Graphics g) // When 'Window' is first
 	{ // shown or damaged
 		drawImage((Graphics2D) g);
 	}
 
+	@Override
 	public void update(Graphics g) // Called by repaint
 	{ //
 		drawImage((Graphics2D) g); // Draw picture

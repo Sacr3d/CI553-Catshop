@@ -11,12 +11,14 @@ import com.example.app.middle.RemoteMiddleFactory;
  * The Customer Client as an Applet
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 public class WebCustomerClient extends JApplet {
 	private static final long serialVersionUID = 1;
 
+	@Override
 	public void init() {
 		String supplied = getParameter("stock"); //
 		String stockURL = supplied.equals("") // URL of stock R

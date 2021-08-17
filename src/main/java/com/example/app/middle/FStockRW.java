@@ -14,17 +14,20 @@ import java.rmi.RemoteException;
 
 import com.example.app.catalogue.Product;
 import com.example.app.debug.DEBUG;
-import com.example.app.remote.RemoteStockRW_I;
+import com.example.app.remote.RemoteStockRWI;
 
 /**
  * Setup connection to the middle tier
+ * 
+ * @author matti
+ * @version 3.0
  */
 
-public class F_StockRW extends F_StockR implements StockReadWriter {
-	private RemoteStockRW_I aR_StockRW = null;
+public class FStockRW extends FStockR implements StockReadWriter {
+	private RemoteStockRWI aRStockRW = null;
 	private String theStockURL = null;
 
-	public F_StockRW(String url) {
+	public FStockRW(String url) {
 		super(url); // Not used
 		theStockURL = url;
 	}
@@ -32,11 +35,11 @@ public class F_StockRW extends F_StockR implements StockReadWriter {
 	private void connect() throws StockException {
 		try // Setup
 		{ // connection
-			aR_StockRW = // Connect to
-					(RemoteStockRW_I) Naming.lookup(theStockURL);// Stub returned
+			aRStockRW = // Connect to
+					(RemoteStockRWI) Naming.lookup(theStockURL);// Stub returned
 		} catch (Exception e) // Failure to
 		{ // attach to the
-			aR_StockRW = null;
+			aRStockRW = null;
 			throw new StockException("Com: " + e.getMessage()); // object
 
 		}
@@ -52,11 +55,11 @@ public class F_StockRW extends F_StockR implements StockReadWriter {
 	public boolean buyStock(String number, int amount) throws StockException {
 		DEBUG.trace("F_StockRW:buyStock()");
 		try {
-			if (aR_StockRW == null)
+			if (aRStockRW == null)
 				connect();
-			return aR_StockRW.buyStock(number, amount);
+			return aRStockRW.buyStock(number, amount);
 		} catch (RemoteException e) {
-			aR_StockRW = null;
+			aRStockRW = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}
@@ -72,11 +75,11 @@ public class F_StockRW extends F_StockR implements StockReadWriter {
 	public void addStock(String number, int amount) throws StockException {
 		DEBUG.trace("F_StockRW:addStock()");
 		try {
-			if (aR_StockRW == null)
+			if (aRStockRW == null)
 				connect();
-			aR_StockRW.addStock(number, amount);
+			aRStockRW.addStock(number, amount);
 		} catch (RemoteException e) {
-			aR_StockRW = null;
+			aRStockRW = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}
@@ -92,11 +95,11 @@ public class F_StockRW extends F_StockR implements StockReadWriter {
 	public void modifyStock(Product detail) throws StockException {
 		DEBUG.trace("F_StockRW:modifyStock()");
 		try {
-			if (aR_StockRW == null)
+			if (aRStockRW == null)
 				connect();
-			aR_StockRW.modifyStock(detail);
+			aRStockRW.modifyStock(detail);
 		} catch (RemoteException e) {
-			aR_StockRW = null;
+			aRStockRW = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}

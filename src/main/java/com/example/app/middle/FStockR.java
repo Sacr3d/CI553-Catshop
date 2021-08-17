@@ -15,17 +15,20 @@ import javax.swing.ImageIcon;
 
 import com.example.app.catalogue.Product;
 import com.example.app.debug.DEBUG;
-import com.example.app.remote.RemoteStockR_I;
+import com.example.app.remote.RemoteStockRI;
 
 /**
  * Setup connection to the middle tier
+ * 
+ * @author matti
+ * @version 3.0
  */
 
-public class F_StockR implements StockReader {
-	private RemoteStockR_I aR_StockR = null;
+public class FStockR implements StockReader {
+	private RemoteStockRI aRStockR = null;
 	private String theStockURL = null;
 
-	public F_StockR(String url) {
+	public FStockR(String url) {
 		DEBUG.trace("F_StockR: %s", url);
 		theStockURL = url;
 	}
@@ -33,11 +36,11 @@ public class F_StockR implements StockReader {
 	private void connect() throws StockException {
 		try // Setup
 		{ // connection
-			aR_StockR = // Connect to
-					(RemoteStockR_I) Naming.lookup(theStockURL);// Stub returned
+			aRStockR = // Connect to
+					(RemoteStockRI) Naming.lookup(theStockURL);// Stub returned
 		} catch (Exception e) // Failure to
 		{ // attach to the
-			aR_StockR = null;
+			aRStockR = null;
 			throw new StockException("Com: " + e.getMessage()); // object
 
 		}
@@ -52,11 +55,11 @@ public class F_StockR implements StockReader {
 	public synchronized boolean exists(String number) throws StockException {
 		DEBUG.trace("F_StockR:exists()");
 		try {
-			if (aR_StockR == null)
+			if (aRStockR == null)
 				connect();
-			return aR_StockR.exists(number);
+			return aRStockR.exists(number);
 		} catch (RemoteException e) {
-			aR_StockR = null;
+			aRStockR = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}
@@ -70,11 +73,11 @@ public class F_StockR implements StockReader {
 	public synchronized Product getDetails(String number) throws StockException {
 		DEBUG.trace("F_StockR:getDetails()");
 		try {
-			if (aR_StockR == null)
+			if (aRStockR == null)
 				connect();
-			return aR_StockR.getDetails(number);
+			return aRStockR.getDetails(number);
 		} catch (RemoteException e) {
-			aR_StockR = null;
+			aRStockR = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}
@@ -82,11 +85,11 @@ public class F_StockR implements StockReader {
 	public synchronized ImageIcon getImage(String number) throws StockException {
 		DEBUG.trace("F_StockR:getImage()");
 		try {
-			if (aR_StockR == null)
+			if (aRStockR == null)
 				connect();
-			return aR_StockR.getImage(number);
+			return aRStockR.getImage(number);
 		} catch (RemoteException e) {
-			aR_StockR = null;
+			aRStockR = null;
 			throw new StockException("Net: " + e.getMessage());
 		}
 	}

@@ -4,15 +4,16 @@ import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import com.example.app.remote.R_Order;
-import com.example.app.remote.R_StockR;
-import com.example.app.remote.R_StockRW;
+import com.example.app.remote.ROrder;
+import com.example.app.remote.RStockR;
+import com.example.app.remote.RStockRW;
 
 /**
  * The server for the middle tier.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 public class Server {
@@ -33,31 +34,31 @@ public class Server {
 	}
 
 	private void bind(String urlStockR, String urlStockRW, String urlOrder) {
-		R_StockR theStockR; // Remote stock object
-		R_StockRW theStockRW; // Remote stock object
-		R_Order theOrder; // Remote order object
+		RStockR theStockR; // Remote stock object
+		RStockRW theStockRW; // Remote stock object
+		ROrder theOrder; // Remote order object
 		System.out.println("Server: "); // Introduction
 		try {
 			LocateRegistry.createRegistry(1099);
-			String IPAddress = InetAddress.getLocalHost().getHostAddress();
-			System.out.println("Server IP address " + IPAddress);
+			String ipAddress = InetAddress.getLocalHost().getHostAddress();
+			System.out.println("Server IP address " + ipAddress);
 		} catch (Exception e) {
 			System.out.println("Fail Starting rmiregistry" + e.getMessage());
 			System.exit(0);
 		}
 
 		try {
-			theStockR = new R_StockR(urlStockR); // Stock R
+			theStockR = new RStockR(urlStockR); // Stock R
 			Naming.rebind(urlStockR, theStockR); // bind to url
 			System.out.println("StockR  bound to: " + // Inform world
 					urlStockR); //
 
-			theStockRW = new R_StockRW(urlStockRW); // Stock RW
+			theStockRW = new RStockRW(urlStockRW); // Stock RW
 			Naming.rebind(urlStockRW, theStockRW); // bind to url
 			System.out.println("StockRW bound to: " + // Inform world
 					urlStockRW); //
 
-			theOrder = new R_Order(urlOrder); // Order
+			theOrder = new ROrder(urlOrder); // Order
 			Naming.rebind(urlOrder, theOrder); // bind to url
 			System.out.println("Order   bound to: " + // Inform world
 					urlOrder);

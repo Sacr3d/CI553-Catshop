@@ -17,13 +17,14 @@ import com.example.app.middle.StockException;
  * relational DataBase.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
-public class R_StockR extends java.rmi.server.UnicastRemoteObject implements RemoteStockR_I {
+public class RStockR extends java.rmi.server.UnicastRemoteObject implements RemoteStockRI {
 	private static final long serialVersionUID = 1;
 	private StockR aStockR = null;
 
-	public R_StockR(String url) throws RemoteException, StockException {
+	public RStockR(String url) throws RemoteException, StockException {
 		aStockR = new StockR();
 	}
 

@@ -12,10 +12,11 @@ import com.example.app.middle.OrderException;
  * Defines the RMI interface for the Order object.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
-public interface RemoteOrder_I extends Remote {
+public interface RemoteOrderI extends Remote {
 	public void newOrder(Basket order) throws RemoteException, OrderException;
 
 	public int uniqueNumber() throws RemoteException, OrderException;

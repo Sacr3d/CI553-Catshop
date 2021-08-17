@@ -1,5 +1,7 @@
 package com.example.app.middle;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
 import com.example.app.catalogue.Product;
@@ -8,10 +10,11 @@ import com.example.app.catalogue.Product;
  * Interface for read access to the stock list.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
-public interface StockReader {
+public interface StockReader extends Serializable {
 
 	/**
 	 * Checks if the product exits in the stock list

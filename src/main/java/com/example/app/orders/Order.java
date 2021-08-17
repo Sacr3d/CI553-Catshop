@@ -23,13 +23,19 @@ import com.example.app.middle.OrderProcessing;
  * </B>
  * 
  * @author Mike Smith University of Brighton
- * @version 3.0
+ * @author matti
+ * @version 3.4
  */
 
 public class Order implements OrderProcessing {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8375427837340464681L;
+
 	private enum State {
-		Waiting, BeingPicked, ToBeCollected
-	};
+		WAITING, BEING_PICKED, TO_BE_COLLECTED
+	}
 
 	/**
 	 * Wraps a Basket and it state into a folder
@@ -39,7 +45,7 @@ public class Order implements OrderProcessing {
 		private Basket basket; // For this basket
 
 		public Folder(Basket anOrder) {
-			stateIs = State.Waiting;
+			stateIs = State.WAITING;
 			basket = anOrder;
 		}
 
@@ -73,7 +79,7 @@ public class Order implements OrderProcessing {
 		for (Product pr : basket) {
 			fr.format("%-15.15s: %3d ", pr.getDescription(), pr.getQuantity());
 		}
-		fr.format(")");
+		fr.format("%s", ")");
 		fr.close();
 		return sb.toString();
 	}
@@ -109,9 +115,9 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Get order to pick");
 		Basket foundWaiting = null;
 		for (Folder bws : folders) {
-			if (bws.getState() == State.Waiting) {
+			if (bws.getState() == State.WAITING) {
 				foundWaiting = bws.getBasket();
-				bws.newState(State.BeingPicked);
+				bws.newState(State.BEING_PICKED);
 				break;
 			}
 		}
@@ -129,8 +135,8 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Order picked [%d]", orderNum);
 		for (int i = 0; i < folders.size(); i++) {
 			if (folders.get(i).getBasket().getOrderNum() == orderNum
-					&& folders.get(i).getState() == State.BeingPicked) {
-				folders.get(i).newState(State.ToBeCollected);
+					&& folders.get(i).getState() == State.BEING_PICKED) {
+				folders.get(i).newState(State.TO_BE_COLLECTED);
 				return true;
 			}
 		}
@@ -147,7 +153,7 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Order collected [%d]", orderNum);
 		for (int i = 0; i < folders.size(); i++) {
 			if (folders.get(i).getBasket().getOrderNum() == orderNum
-					&& folders.get(i).getState() == State.ToBeCollected) {
+					&& folders.get(i).getState() == State.TO_BE_COLLECTED) {
 				folders.remove(i);
 				return true;
 			}
@@ -170,29 +176,12 @@ public class Order implements OrderProcessing {
 	 * @return a Map with the keys: "Waiting", "BeingPicked", "ToBeCollected"
 	 */
 	public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
-		// DEBUG.trace( "DEBUG: get state of order system" );
 		Map<String, List<Integer>> res = new HashMap<>();
 
-		res.put("Waiting", orderNums(State.Waiting));
-		res.put("BeingPicked", orderNums(State.BeingPicked));
-		res.put("ToBeCollected", orderNums(State.ToBeCollected));
+		res.put("Waiting", orderNums(State.WAITING));
+		res.put("BeingPicked", orderNums(State.BEING_PICKED));
+		res.put("ToBeCollected", orderNums(State.TO_BE_COLLECTED));
 
-		return res;
-	}
-
-	/**
-	 * Return the list of order numbers in selected state
-	 * 
-	 * @param inState The state to find order numbers in
-	 * @return A list of order numbers
-	 */
-	private List<Integer> orderNumsOldWay(State inState) {
-		List<Integer> res = new ArrayList<>();
-		for (Folder folder : folders) {
-			if (folder.getState() == inState) {
-				res.add(folder.getBasket().getOrderNum());
-			}
-		}
 		return res;
 	}
 

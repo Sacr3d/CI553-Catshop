@@ -27,7 +27,7 @@ import com.example.app.middle.OrderException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.2
  */
 public class DisplayView extends Canvas implements Subscriber<String> {
 	private static final long serialVersionUID = 1L;
@@ -79,8 +79,8 @@ public class DisplayView extends Canvas implements Subscriber<String> {
 	}
 
 	private Dimension theAD; // Alternate Dimension
-	private BufferedImage theAI; // Alternate Image
-	private Graphics2D theAG; // Alternate Graphics
+	private transient BufferedImage theAI; // Alternate Image
+	private transient Graphics2D theAG; // Alternate Graphics
 
 	public void drawScreen(Graphics2D g) // Re draw contents
 	{ // allow resize
@@ -111,7 +111,7 @@ public class DisplayView extends Canvas implements Subscriber<String> {
 		g.fill(new Rectangle2D.Double(0, 0, w, h));
 
 		// Draw state of system on display
-		String lines[] = textToDisplay.split("\n");
+		String[] lines = textToDisplay.split("\n");
 		g.setPaint(Color.black);
 		for (int i = 0; i < lines.length; i++) {
 			g.drawString(lines[i], 0, 50 + 50 * i);
@@ -141,7 +141,7 @@ public class DisplayView extends Canvas implements Subscriber<String> {
 
 	@Override
 	public void onSubscribe(Subscription subscription) {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 
@@ -178,7 +178,7 @@ public class DisplayView extends Canvas implements Subscriber<String> {
 
 	@Override
 	public void onComplete() {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 }

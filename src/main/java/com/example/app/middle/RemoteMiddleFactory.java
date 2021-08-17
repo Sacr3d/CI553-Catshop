@@ -1,6 +1,7 @@
 /**
  * @author  Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 package com.example.app.middle;
 
@@ -9,20 +10,20 @@ package com.example.app.middle;
  */
 
 public class RemoteMiddleFactory implements MiddleFactory {
-	private String theStockR_URL = "";
-	private String theStockRW_URL = "";
-	private String theOrder_URL = "";
+	private String theStockRURL = "";
+	private String theStockRWURL = "";
+	private String theOrderURL = "";
 
 	public void setStockRInfo(String url) {
-		theStockR_URL = url;
+		theStockRURL = url;
 	}
 
 	public void setStockRWInfo(String url) {
-		theStockRW_URL = url;
+		theStockRWURL = url;
 	}
 
 	public void setOrderInfo(String url) {
-		theOrder_URL = url;
+		theOrderURL = url;
 	}
 
 	/**
@@ -31,7 +32,7 @@ public class RemoteMiddleFactory implements MiddleFactory {
 	 */
 
 	public StockReader makeStockReader() throws StockException {
-		return new F_StockR(theStockR_URL);
+		return new FStockR(theStockRURL);
 	}
 
 	/**
@@ -39,13 +40,13 @@ public class RemoteMiddleFactory implements MiddleFactory {
 	 * RMI
 	 */
 	public StockReadWriter makeStockReadWriter() throws StockException {
-		return new F_StockRW(theStockRW_URL);
+		return new FStockRW(theStockRWURL);
 	}
 
 	/**
 	 * Return an object to access the order processing system. Access is via RMI
 	 */
 	public OrderProcessing makeOrderProcessing() throws OrderException {
-		return new F_Order(theOrder_URL);
+		return new FOrder(theOrderURL);
 	}
 }

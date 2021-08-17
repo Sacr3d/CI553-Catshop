@@ -4,7 +4,8 @@ package com.example.app.dbaccess;
  * Implements Read /Write access to the stock list
  * The stock list is held in a relational DataBase
  * @author  Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 import java.sql.SQLException;
@@ -23,6 +24,11 @@ import com.example.app.middle.StockReadWriter;
  * Implements read/write access to the stock database.
  */
 public class StockRW extends StockR implements StockReadWriter {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6770152468391598736L;
+
 	/*
 	 * Connects to database
 	 */
@@ -43,7 +49,7 @@ public class StockRW extends StockR implements StockReadWriter {
 		try {
 			getStatementObject().executeUpdate("update StockTable set stockLevel = stockLevel-" + amount
 					+ "       where productNo = '" + pNum + "' and " + "             stockLevel >= " + amount + "");
-			updates = 1; // getStatementObject().getUpdateCount();
+			updates = 1;
 		} catch (SQLException e) {
 			throw new StockException("SQL buyStock: " + e.getMessage());
 		}
@@ -61,7 +67,7 @@ public class StockRW extends StockR implements StockReadWriter {
 		try {
 			getStatementObject().executeUpdate("update StockTable set stockLevel = stockLevel + " + amount
 					+ "         where productNo = '" + pNum + "'");
-			// getConnectionObject().commit();
+
 			DEBUG.trace("DB StockRW: addStock(%s,%d)", pNum, amount);
 		} catch (SQLException e) {
 			throw new StockException("SQL addStock: " + e.getMessage());
@@ -91,7 +97,6 @@ public class StockRW extends StockR implements StockReadWriter {
 				getStatementObject().executeUpdate("update StockTable set stockLevel = " + detail.getQuantity()
 						+ "  where productNo = '" + detail.getProductNum() + "'");
 			}
-			// getConnectionObject().commit();
 
 		} catch (SQLException e) {
 			throw new StockException("SQL modifyStock: " + e.getMessage());

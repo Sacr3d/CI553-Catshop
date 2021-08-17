@@ -111,7 +111,7 @@ public class CashierView implements Subscriber<String> {
 
 	@Override
 	public void onSubscribe(Subscription subscription) {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 
@@ -142,7 +142,7 @@ public class CashierView implements Subscriber<String> {
 
 	@Override
 	public void onComplete() {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 

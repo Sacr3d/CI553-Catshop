@@ -22,7 +22,7 @@ import com.example.app.middle.MiddleFactory;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class CustomerView implements Subscriber<String> {
@@ -30,6 +30,13 @@ public class CustomerView implements Subscriber<String> {
 	{
 		public static final String CHECK = "Check";
 		public static final String CLEAR = "Clear";
+
+		/**
+		 * non-public constructor
+		 */
+		private Name() {
+			throw new IllegalStateException("Utility class");
+		}
 	}
 
 	private static final int H = 300; // Height of window pixels
@@ -112,7 +119,7 @@ public class CustomerView implements Subscriber<String> {
 
 	@Override
 	public void onSubscribe(Subscription subscription) {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 
@@ -144,7 +151,7 @@ public class CustomerView implements Subscriber<String> {
 
 	@Override
 	public void onComplete() {
-		// TODO Auto-generated method stub
+		// Do nothing
 
 	}
 

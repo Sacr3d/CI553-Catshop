@@ -17,12 +17,10 @@ import com.example.app.middle.StockReader;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class CustomerModel implements Publisher<String> {
 	private Basket theBasket = null; // Bought items
-
-	private String pn = ""; // Product being processed
 
 	private StockReader theStock = null;
 	private ImageIcon thePic = null;
@@ -60,7 +58,7 @@ public class CustomerModel implements Publisher<String> {
 	public void doCheck(String productNum) {
 		theBasket.clear(); // Clear s. list
 		String theAction = "";
-		pn = productNum.trim(); // Product no.
+		String pn = productNum.trim(); // Product no.
 		int amount = 1; // & quantity
 		try {
 			if (theStock.exists(pn)) // Stock Exists?

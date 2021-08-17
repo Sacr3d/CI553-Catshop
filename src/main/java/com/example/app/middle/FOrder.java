@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.example.app.catalogue.Basket;
 import com.example.app.debug.DEBUG;
-import com.example.app.remote.RemoteOrder_I;
+import com.example.app.remote.RemoteOrderI;
 
 // There can only be 1 ResultSet opened per statement
 // so no simultaneous use of the statement object
@@ -17,25 +17,33 @@ import com.example.app.remote.RemoteOrder_I;
  * tier. This code is incomplete
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.01
  */
 
-public class F_Order implements OrderProcessing {
-	private RemoteOrder_I aR_Order = null;
+public class FOrder implements OrderProcessing {
+	private static final String NET = "Net: ";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 141104575767673855L;
+
+	private RemoteOrderI aROrder = null;
 	private String theOrderURL = null;
 
-	public F_Order(String url) {
+	public FOrder(String url) {
 		theOrderURL = url;
 	}
 
 	private void connect() throws OrderException {
 		try // Setup
 		{ // connection
-			aR_Order = // Connect to
-					(RemoteOrder_I) Naming.lookup(theOrderURL); // Stub returned
+			aROrder = // Connect to
+					(RemoteOrderI) Naming.lookup(theOrderURL); // Stub returned
 		} catch (Exception e) // Failure to
 		{ // attach to the
-			aR_Order = null;
+			aROrder = null;
 			throw new OrderException("Com: " + e.getMessage()); // object
 
 		}
@@ -44,24 +52,24 @@ public class F_Order implements OrderProcessing {
 	public void newOrder(Basket bought) throws OrderException {
 		DEBUG.trace("F_Order:newOrder()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			aR_Order.newOrder(bought);
+			aROrder.newOrder(bought);
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
 	public int uniqueNumber() throws OrderException {
 		DEBUG.trace("F_Order:uniqueNumber()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			return aR_Order.uniqueNumber();
+			return aROrder.uniqueNumber();
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -74,12 +82,12 @@ public class F_Order implements OrderProcessing {
 	public synchronized Basket getOrderToPick() throws OrderException {
 		DEBUG.trace("F_Order:getOrderTioPick()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			return aR_Order.getOrderToPick();
+			return aROrder.getOrderToPick();
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -91,12 +99,12 @@ public class F_Order implements OrderProcessing {
 	public synchronized boolean informOrderPicked(int orderNum) throws OrderException {
 		DEBUG.trace("F_Order:informOrderPicked()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			return aR_Order.informOrderPicked(orderNum);
+			return aROrder.informOrderPicked(orderNum);
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -108,12 +116,12 @@ public class F_Order implements OrderProcessing {
 	public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
 		DEBUG.trace("F_Order:informOrderCollected()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			return aR_Order.informOrderCollected(orderNum);
+			return aROrder.informOrderCollected(orderNum);
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -124,12 +132,12 @@ public class F_Order implements OrderProcessing {
 	public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
 		DEBUG.trace("F_Order:getOrderState()");
 		try {
-			if (aR_Order == null)
+			if (aROrder == null)
 				connect();
-			return aR_Order.getOrderState();
+			return aROrder.getOrderState();
 		} catch (Exception e) {
-			aR_Order = null;
-			throw new OrderException("Net: " + e.getMessage());
+			aROrder = null;
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 }

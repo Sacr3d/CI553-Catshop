@@ -1,6 +1,7 @@
 /**
  * @author  Mike Smith University of Brighton
- * @version 3.0
+ * @author matti
+ * @version 3.1
  */
 
 package com.example.app.dbaccess;
@@ -23,7 +24,6 @@ import com.example.app.debug.DEBUG;
 public class DBAccessFactory {
 	private static String theAction = "";
 	private static String theDataBase = "";
-	private static String theOS = "";
 
 	public static void setAction(String name) {
 		theAction = name;
@@ -34,7 +34,7 @@ public class DBAccessFactory {
 		String os = System.getProperties().getProperty("os.name");
 		String arch = System.getProperties().getProperty("os.arch");
 		String osVer = System.getProperties().getProperty("os.version");
-		theOS = String.format("%s %s %s", os, osVer, arch);
+		String theOS = String.format("%s %s %s", os, osVer, arch);
 		System.out.println(theOS);
 		return theOS;
 	}
@@ -78,7 +78,7 @@ public class DBAccessFactory {
 	 */
 	private static String fileToString(String file) {
 		byte[] vec = fileToBytes(file);
-		return new String(vec).replaceAll("\n", "").replaceAll("\r", "");
+		return new String(vec).replace("\n", "").replace("\r", "");
 	}
 
 	/**
@@ -93,9 +93,9 @@ public class DBAccessFactory {
 			final int len = (int) length(file);
 			if (len < 1000) {
 				vec = new byte[len];
-				FileInputStream istream = new FileInputStream(file);
-				final int read = istream.read(vec, 0, len);
-				istream.close();
+				try (FileInputStream istream = new FileInputStream(file)) {
+					istream.read(vec, 0, len);
+				}
 				return vec;
 			} else {
 				DEBUG.error("File %s length %d bytes too long", file, len);

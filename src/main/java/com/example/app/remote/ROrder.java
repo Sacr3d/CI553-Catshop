@@ -13,14 +13,15 @@ import com.example.app.orders.Order;
  * The order processing handling. This code is incomplete
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.1
  */
 
-public class R_Order extends UnicastRemoteObject implements RemoteOrder_I {
+public class ROrder extends UnicastRemoteObject implements RemoteOrderI {
 	private static final long serialVersionUID = 1;
 	private Order aOrder = null;
 
-	public R_Order(String url) throws RemoteException, OrderException {
+	public ROrder() throws RemoteException {
 		aOrder = new Order();
 	}
 
@@ -47,6 +48,16 @@ public class R_Order extends UnicastRemoteObject implements RemoteOrder_I {
 
 	public Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException {
 		return aOrder.getOrderState();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

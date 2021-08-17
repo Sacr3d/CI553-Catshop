@@ -11,7 +11,8 @@ import java.util.Locale;
  * are to be/ wished to be purchased.
  * 
  * @author Mike Smith University of Brighton
- * @version 2.2
+ * @author matti
+ * @version 3.2
  *
  */
 public class Basket extends ArrayList<Product> implements Serializable {
@@ -45,19 +46,6 @@ public class Basket extends ArrayList<Product> implements Serializable {
 	}
 
 	/**
-	 * Add a product to the Basket. Product is appended to the end of the existing
-	 * products in the basket.
-	 * 
-	 * @param pr A product to be added to the basket
-	 * @return true if successfully adds the product
-	 */
-	// Will be in the Java doc for Basket
-	@Override
-	public boolean add(Product pr) {
-		return super.add(pr); // Call add in ArrayList
-	}
-
-	/**
 	 * Returns a description of the products in the basket suitable for printing.
 	 * 
 	 * @return a string description of the basket products
@@ -65,27 +53,38 @@ public class Basket extends ArrayList<Product> implements Serializable {
 	public String getDetails() {
 		Locale uk = Locale.UK;
 		StringBuilder sb = new StringBuilder(256);
-		Formatter fr = new Formatter(sb, uk);
-		String csign = (Currency.getInstance(uk)).getSymbol();
-		double total = 0.00;
-		if (theOrderNum != 0)
-			fr.format("Order number: %03d\n", theOrderNum);
+		try (Formatter fr = new Formatter(sb, uk)) {
+			String csign = (Currency.getInstance(uk)).getSymbol();
+			double total = 0.00;
+			if (theOrderNum != 0)
+				fr.format("Order number: %03d%n", theOrderNum);
 
-		if (this.size() > 0) {
-			for (Product pr : this) {
-				int number = pr.getQuantity();
-				fr.format("%-7s", pr.getProductNum());
-				fr.format("%-14.14s ", pr.getDescription());
-				fr.format("(%3d) ", number);
-				fr.format("%s%7.2f", csign, pr.getPrice() * number);
-				fr.format("\n");
-				total += pr.getPrice() * number;
+			if (this.size() > 0) {
+				for (Product pr : this) {
+					int number = pr.getQuantity();
+					fr.format("%-7s", pr.getProductNum());
+					fr.format("%-14.14s ", pr.getDescription());
+					fr.format("(%3d) ", number);
+					fr.format("%s%7.2f", csign, pr.getPrice() * number);
+					fr.format("%s", "\n");
+					total += pr.getPrice() * number;
+				}
+				fr.format("%s", "----------------------------\n");
+				fr.format("%s", "Total                       ");
+				fr.format("%s%7.2f%n", csign, total);
 			}
-			fr.format("----------------------------\n");
-			fr.format("Total                       ");
-			fr.format("%s%7.2f\n", csign, total);
-			fr.close();
 		}
 		return sb.toString();
+
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 }

@@ -16,7 +16,8 @@ import com.example.app.middle.StockReadWriter;
  * Implements the Model of the cashier client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.1
  */
 public class CashierModel implements Publisher<String> {
 	private enum State {
@@ -26,8 +27,6 @@ public class CashierModel implements Publisher<String> {
 	private State theState = State.PROCESS; // Current state
 	private Product theProduct = null; // Current product
 	private Basket theBasket = null; // Bought items
-
-	private String pn = ""; // Product being processed
 
 	private StockReadWriter theStock = null;
 	private OrderProcessing theOrder = null;
@@ -67,7 +66,7 @@ public class CashierModel implements Publisher<String> {
 	public void doCheck(String productNum) {
 		String theAction = "";
 		theState = State.PROCESS; // State process
-		pn = productNum.trim(); // Product no.
+		String pn = productNum.trim(); // Product no.
 		int amount = 1; // & quantity
 		try {
 			if (theStock.exists(pn)) // Stock Exists?
@@ -136,7 +135,7 @@ public class CashierModel implements Publisher<String> {
 	public void doBought() {
 		String theAction = "";
 		try {
-			if (theBasket != null && theBasket.size() >= 1) // items > 1
+			if (theBasket != null && !theBasket.isEmpty()) // is not empty
 			{ // T
 				theOrder.newOrder(theBasket); // Process order
 				theBasket = null; // reset

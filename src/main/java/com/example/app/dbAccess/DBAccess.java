@@ -3,13 +3,15 @@ package com.example.app.dbaccess;
 /**
   * Implements generic management of a database.
   * @author  Mike Smith University of Brighton
-  * @version 2.0
+  * @version 3.0
   */
 
 /**
  * Base class that defines the access to the database driver
  */
 public class DBAccess {
+	private static final String EMPTY_STRING = "";
+
 	/**
 	 * Load the Apache Derby database driver
 	 */
@@ -23,14 +25,14 @@ public class DBAccess {
 	 * @return url to database
 	 */
 	public String urlOfDatabase() {
-		return "";
+		return EMPTY_STRING;
 	}
 
 	public String username() {
-		return "";
+		return EMPTY_STRING;
 	}
 
 	public String password() {
-		return "";
+		return EMPTY_STRING;
 	}
 }

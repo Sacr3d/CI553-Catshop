@@ -23,13 +23,13 @@ import com.example.app.middle.OrderProcessing;
  * </B>
  * 
  * @author Mike Smith University of Brighton
- * @version 3.0
+ * @version 3.1
  */
 
 public class Order implements OrderProcessing {
 	private enum State {
-		Waiting, BeingPicked, ToBeCollected
-	};
+		WAITING, BEING_PICKED, TO_BE_COLLECTED
+	}
 
 	/**
 	 * Wraps a Basket and it state into a folder
@@ -39,7 +39,7 @@ public class Order implements OrderProcessing {
 		private Basket basket; // For this basket
 
 		public Folder(Basket anOrder) {
-			stateIs = State.Waiting;
+			stateIs = State.WAITING;
 			basket = anOrder;
 		}
 
@@ -109,9 +109,9 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Get order to pick");
 		Basket foundWaiting = null;
 		for (Folder bws : folders) {
-			if (bws.getState() == State.Waiting) {
+			if (bws.getState() == State.WAITING) {
 				foundWaiting = bws.getBasket();
-				bws.newState(State.BeingPicked);
+				bws.newState(State.BEING_PICKED);
 				break;
 			}
 		}
@@ -129,8 +129,8 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Order picked [%d]", orderNum);
 		for (int i = 0; i < folders.size(); i++) {
 			if (folders.get(i).getBasket().getOrderNum() == orderNum
-					&& folders.get(i).getState() == State.BeingPicked) {
-				folders.get(i).newState(State.ToBeCollected);
+					&& folders.get(i).getState() == State.BEING_PICKED) {
+				folders.get(i).newState(State.TO_BE_COLLECTED);
 				return true;
 			}
 		}
@@ -147,7 +147,7 @@ public class Order implements OrderProcessing {
 		DEBUG.trace("DEBUG: Order collected [%d]", orderNum);
 		for (int i = 0; i < folders.size(); i++) {
 			if (folders.get(i).getBasket().getOrderNum() == orderNum
-					&& folders.get(i).getState() == State.ToBeCollected) {
+					&& folders.get(i).getState() == State.TO_BE_COLLECTED) {
 				folders.remove(i);
 				return true;
 			}
@@ -173,9 +173,9 @@ public class Order implements OrderProcessing {
 		// DEBUG.trace( "DEBUG: get state of order system" );
 		Map<String, List<Integer>> res = new HashMap<>();
 
-		res.put("Waiting", orderNums(State.Waiting));
-		res.put("BeingPicked", orderNums(State.BeingPicked));
-		res.put("ToBeCollected", orderNums(State.ToBeCollected));
+		res.put("Waiting", orderNums(State.WAITING));
+		res.put("BeingPicked", orderNums(State.BEING_PICKED));
+		res.put("ToBeCollected", orderNums(State.TO_BE_COLLECTED));
 
 		return res;
 	}

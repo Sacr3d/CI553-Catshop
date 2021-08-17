@@ -14,14 +14,14 @@ import com.example.app.orders.Order;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class ROrder extends UnicastRemoteObject implements RemoteOrderI {
 	private static final long serialVersionUID = 1;
 	private Order aOrder = null;
 
-	public ROrder(String url) throws RemoteException, OrderException {
+	public ROrder(String url) throws RemoteException {
 		aOrder = new Order();
 	}
 
@@ -48,6 +48,16 @@ public class ROrder extends UnicastRemoteObject implements RemoteOrderI {
 
 	public Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException {
 		return aOrder.getOrderState();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

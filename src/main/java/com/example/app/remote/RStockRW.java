@@ -18,7 +18,7 @@ import com.example.app.middle.StockException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class RStockRW extends java.rmi.server.UnicastRemoteObject implements RemoteStockRWI {
@@ -105,5 +105,15 @@ public class RStockRW extends java.rmi.server.UnicastRemoteObject implements Rem
 	 */
 	public synchronized void modifyStock(Product product) throws StockException {
 		aStockRW.modifyStock(product);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 }

@@ -18,7 +18,7 @@ import com.example.app.middle.StockException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class RStockR extends java.rmi.server.UnicastRemoteObject implements RemoteStockRI {
 	private static final long serialVersionUID = 1;
@@ -57,6 +57,16 @@ public class RStockR extends java.rmi.server.UnicastRemoteObject implements Remo
 	 */
 	public synchronized ImageIcon getImage(String pNum) throws RemoteException, StockException {
 		return aStockR.getImage(pNum);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 }

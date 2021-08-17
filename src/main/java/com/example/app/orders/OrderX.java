@@ -30,19 +30,20 @@ import com.example.app.middle.OrderProcessing;
  * </B>
  * 
  * @author Michael Alexander Smith
- * @version 2.0
+ * @author matti
+ * @version 3.1
  */
 
 public class OrderX implements OrderProcessing {
 	private static int theNextNumber = 1; // Start at 1
 	// Orders entered but waiting to be processed (picked)
-	private ArrayList<Basket> theWaitingTray = new ArrayList<Basket>();
+	private ArrayList<Basket> theWaitingTray = new ArrayList<>();
 
 	// Orders being processed (currently being picked)
-	private ArrayList<Basket> theBeingPickedTray = new ArrayList<Basket>();
+	private ArrayList<Basket> theBeingPickedTray = new ArrayList<>();
 
 	// Orders waiting to be collected by the customer
-	private ArrayList<Basket> theToBeCollectedTray = new ArrayList<Basket>();
+	private ArrayList<Basket> theToBeCollectedTray = new ArrayList<>();
 
 	/**
 	 * Used to generate debug information
@@ -95,7 +96,7 @@ public class OrderX implements OrderProcessing {
 	public synchronized Basket getOrderToPick() throws OrderException {
 		// You need to modify and fill in the correct code
 		DEBUG.trace("DEBUG: Get order to pick");
-		if (theWaitingTray.size() > 0) {
+		if (!theWaitingTray.isEmpty()) {
 			Basket process = theWaitingTray.remove(0);
 			theBeingPickedTray.add(process);
 			return process;
@@ -160,7 +161,7 @@ public class OrderX implements OrderProcessing {
 
 	public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
 		DEBUG.trace("DEBUG: get state of order system");
-		Map<String, List<Integer>> res = new HashMap<String, List<Integer>>();
+		Map<String, List<Integer>> res = new HashMap<>();
 		res.put("Waiting", orderNos(theWaitingTray));
 		res.put("BeingPicked", orderNos(theBeingPickedTray));
 		res.put("ToBeCollected", orderNos(theToBeCollectedTray));
@@ -169,7 +170,7 @@ public class OrderX implements OrderProcessing {
 	}
 
 	private List<Integer> orderNos(ArrayList<Basket> queue) {
-		List<Integer> res = new ArrayList<Integer>();
+		List<Integer> res = new ArrayList<>();
 		for (Basket sb : queue) {
 			res.add(sb.getOrderNum());
 		}

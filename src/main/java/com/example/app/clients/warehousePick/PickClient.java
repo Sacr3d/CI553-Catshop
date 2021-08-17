@@ -11,10 +11,10 @@ import com.example.app.middle.RemoteMiddleFactory;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class PickClient {
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		String stockURL = args.length < 1 // URL of stock RW
 				? Names.STOCK_RW // default location
 				: args[0]; // supplied location

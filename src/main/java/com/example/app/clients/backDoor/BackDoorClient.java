@@ -10,11 +10,12 @@ import com.example.app.middle.RemoteMiddleFactory;
  * The standalone BackDoor Client
  * 
  * @author Mike Smith University of Brighton
- * @version 2.0
+ * @author matti
+ * @version 3.0
  */
 
 public class BackDoorClient {
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		String stockURL = args.length < 1 // URL of stock RW
 				? Names.STOCK_RW // default location
 				: args[0]; // supplied location

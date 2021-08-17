@@ -27,7 +27,7 @@ import com.example.app.middle.OrderException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class DisplayView extends Canvas implements Subscriber<String> {
 	private static final long serialVersionUID = 1L;
@@ -111,7 +111,7 @@ public class DisplayView extends Canvas implements Subscriber<String> {
 		g.fill(new Rectangle2D.Double(0, 0, w, h));
 
 		// Draw state of system on display
-		String lines[] = textToDisplay.split("\n");
+		String[] lines = textToDisplay.split("\n");
 		g.setPaint(Color.black);
 		for (int i = 0; i < lines.length; i++) {
 			g.drawString(lines[i], 0, 50 + 50 * i);

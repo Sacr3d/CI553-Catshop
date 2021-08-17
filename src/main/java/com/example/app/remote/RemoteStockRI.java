@@ -1,5 +1,6 @@
 package com.example.app.remote;
 
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -13,10 +14,10 @@ import com.example.app.middle.StockException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
-public interface RemoteStockRI extends Remote {
+public interface RemoteStockRI extends Remote, Serializable {
 	boolean exists(String number) throws RemoteException, StockException;
 
 	Product getDetails(String number) throws RemoteException, StockException;

@@ -23,10 +23,16 @@ import com.example.app.middle.OrderProcessing;
  * </B>
  * 
  * @author Mike Smith University of Brighton
- * @version 3.1
+ * @author matti
+ * @version 3.3
  */
 
 public class Order implements OrderProcessing {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8375427837340464681L;
+
 	private enum State {
 		WAITING, BEING_PICKED, TO_BE_COLLECTED
 	}

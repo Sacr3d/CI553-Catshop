@@ -28,10 +28,19 @@ import com.example.app.middle.StockReader;
 
 /**
  * Implements read only access to the stock database.
+ * 
+ * @author matti
+ * @version 3.1
+ *
  */
 public class StockR implements StockReader {
-	private Connection theCon = null; // Connection to database
-	private Statement theStmt = null; // Statement object
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6434034315442865857L;
+
+	private transient Connection theCon = null; // Connection to database
+	private transient Statement theStmt = null; // Statement object
 
 	/**
 	 * Connects to database Uses a factory method to help setup the connection

@@ -1,5 +1,6 @@
 package com.example.app.clients.shopdisplay;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Flow.Publisher;
@@ -20,13 +21,18 @@ import com.example.app.middle.OrderProcessing;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
-public class DisplayModel implements Publisher<String> {
+public class DisplayModel implements Publisher<String>, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3983201667255086550L;
 
 	private OrderProcessing theOrder = null;
-	private Subscriber<? super String> subscriber;
+	private transient Subscriber<? super String> subscriber;
 
 	/**
 	 * Set up initial connection to the order processing system

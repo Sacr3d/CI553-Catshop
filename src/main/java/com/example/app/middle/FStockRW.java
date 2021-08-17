@@ -20,10 +20,15 @@ import com.example.app.remote.RemoteStockRWI;
  * Setup connection to the middle tier
  * 
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class FStockRW extends FStockR implements StockReadWriter {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 659324635112773384L;
+
 	private RemoteStockRWI aRStockRW = null;
 	private String theStockURL = null;
 

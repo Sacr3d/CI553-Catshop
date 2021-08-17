@@ -1,5 +1,6 @@
 package com.example.app.remote;
 
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -13,10 +14,10 @@ import com.example.app.middle.OrderException;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
-public interface RemoteOrderI extends Remote {
+public interface RemoteOrderI extends Remote, Serializable {
 	public void newOrder(Basket order) throws RemoteException, OrderException;
 
 	public int uniqueNumber() throws RemoteException, OrderException;

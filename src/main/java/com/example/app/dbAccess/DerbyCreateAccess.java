@@ -9,7 +9,7 @@ package com.example.app.dbaccess;
  */
 
 class DerbyCreateAccess extends DBAccess {
-	private static final String URLdb = "jdbc:derby:catshop.db;create=true";
+	private static final String URL_DB = "jdbc:derby:catshop.db;create=true";
 	private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 
 	@Override
@@ -19,6 +19,6 @@ class DerbyCreateAccess extends DBAccess {
 
 	@Override
 	public String urlOfDatabase() {
-		return URLdb;
+		return URL_DB;
 	}
 }

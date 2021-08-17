@@ -9,7 +9,7 @@ import java.awt.Toolkit;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class PosOnScrn {
 	private static final int CLIENT_W = 400;
@@ -56,4 +56,12 @@ public class PosOnScrn {
 		next();
 		return pos;
 	}
+
+	/**
+	 * non-public constructor
+	 */
+	private PosOnScrn() {
+		throw new IllegalStateException("Utility class");
+	}
+
 }

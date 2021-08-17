@@ -15,10 +15,13 @@ import com.example.app.dbaccess.DBAccessFactory;
  * Repopulate the database with test data
  * 
  * @author Mike Smith University of Brighton
- * @version 3.0 Derby
+ * @author matti
+ * @version 3.3 Derby
  */
 
 public class Setup {
+	private static final String INSERT_INTO_STOCK_TABLE_VALUES = "insert into StockTable values ";
+	private static final String INSERT_INTO_PRODUCT_TABLE_VALUES = "insert into ProductTable values ";
 	private static String[] sqlStatements = {
 
 //  " SQL code to set up database tables",
@@ -30,22 +33,25 @@ public class Setup {
 			"create table ProductTable (" + "productNo      Char(4)," + "description    Varchar(40),"
 					+ "picture        Varchar(80)," + "price          Float)",
 
-			"insert into ProductTable values " + "('0001', '40 inch LED HD TV', 'images/pic0001.jpg', 269.00)",
-			"insert into ProductTable values " + "('0002', 'DAB Radio',         'images/pic0002.jpg', 29.99)",
-			"insert into ProductTable values " + "('0003', 'Toaster',           'images/pic0003.jpg', 19.99)",
-			"insert into ProductTable values " + "('0004', 'Watch',             'images/pic0004.jpg', 29.99)",
-			"insert into ProductTable values " + "('0005', 'Digital Camera',    'images/pic0005.jpg', 89.99)",
-			"insert into ProductTable values " + "('0006', 'MP3 player',        'images/pic0006.jpg', 7.99)",
-			"insert into ProductTable values " + "('0007', '32Gb USB2 drive',   'images/pic0007.jpg', 6.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0001', '40 inch LED HD TV', 'images/pic0001.jpg', 269.00)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0002', 'DAB Radio',         'images/pic0002.jpg', 29.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0003', 'Toaster',           'images/pic0003.jpg', 19.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0004', 'Watch',             'images/pic0004.jpg', 29.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0005', 'Digital Camera',    'images/pic0005.jpg', 89.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0006', 'MP3 player',        'images/pic0006.jpg', 7.99)",
+			INSERT_INTO_PRODUCT_TABLE_VALUES + "('0007', '32Gb USB2 drive',   'images/pic0007.jpg', 6.99)",
 //  "select * from ProductTable",
 
 			"drop table StockTable",
 			"create table StockTable (" + "productNo      Char(4)," + "stockLevel     Integer)",
 
-			"insert into StockTable values ( '0001',  90 )", "insert into StockTable values ( '0002',  20 )",
-			"insert into StockTable values ( '0003',  33 )", "insert into StockTable values ( '0004',  10 )",
-			"insert into StockTable values ( '0005',  17 )", "insert into StockTable values ( '0006',  15 )",
-			"insert into StockTable values ( '0007',  01 )",
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0001',  90 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0002',  20 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0003',  33 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0004',  10 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0005',  17 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0006',  15 )", //
+			INSERT_INTO_STOCK_TABLE_VALUES + "( '0007',  01 )", //
 
 			"select * from StockTable, ProductTable " + " where StockTable.productNo = ProductTable.productNo"
 
@@ -69,60 +75,59 @@ public class Setup {
 		} catch (Exception e) {
 			System.err.println("Can not load JDBC/ODBC driver.");
 			System.exit(-1);
+
 		}
 
-		Statement stmt = null;
-		try {
-			stmt = theCon.createStatement();
-		} catch (Exception e) {
-			System.err.println("problems creating statement object");
-		}
+		try (Statement stmt = theCon.createStatement()) {
 
-		// execute SQL commands to create table, insert data
-		for (String sqlStatement : sqlStatements) {
-			try {
-				System.out.println(sqlStatement);
-				switch (sqlStatement.charAt(0)) {
-				case '/':
-					System.out.println("------------------------------");
-					break;
-				case 's':
-				case 'f':
-					query(stmt, dbDriver.urlOfDatabase(), sqlStatement);
-					break;
-				case '*':
-					if (sqlStatement.length() >= 2)
-						switch (sqlStatement.charAt(1)) {
-						case 'c':
-							theCon.commit();
-							break;
-						case 'r':
-							theCon.rollback();
-							break;
-						case '+':
-							theCon.setAutoCommit(true);
-							break;
-						case '-':
-							theCon.setAutoCommit(false);
-							break;
-						}
-					break;
-				default:
-					stmt.execute(sqlStatement);
-				}
-				// System.out.println();
-			} catch (Exception e) {
-				System.out.println("problems with SQL sent to " + dbDriver.urlOfDatabase() + "\n" + sqlStatement + "\n"
-						+ e.getMessage());
+			// execute SQL commands to create table, insert data
+			for (String sqlStatement : sqlStatements) {
+				executeStatment(theCon, dbDriver, stmt, sqlStatement);
 			}
+		} catch (SQLException e1) {
+			System.err.println("problems creating statement object");
+
 		}
 
+	}
+
+	private static void executeStatment(Connection theCon, DBAccess dbDriver, Statement stmt, String sqlStatement) {
 		try {
-			theCon.close();
+			System.out.println(sqlStatement);
+			switch (sqlStatement.charAt(0)) {
+			case '/':
+				System.out.println("------------------------------");
+				break;
+			case 's':
+			case 'f':
+				query(stmt, dbDriver.urlOfDatabase(), sqlStatement);
+				break;
+			case '*':
+				if (sqlStatement.length() >= 2)
+					switch (sqlStatement.charAt(1)) {
+					case 'c':
+						theCon.commit();
+						break;
+					case 'r':
+						theCon.rollback();
+						break;
+					case '+':
+						theCon.setAutoCommit(true);
+						break;
+					case '-':
+						theCon.setAutoCommit(false);
+						break;
+					default:
+					}
+				break;
+			default:
+				stmt.execute(sqlStatement);
+			}
+			// System.out.println();
 		} catch (Exception e) {
-			System.err.println("problems with close " + ": " + e.getMessage());
+			System.out.println("problems with SQL sent to " + dbDriver.urlOfDatabase() + "\n" + sqlStatement + "\n"
+					+ e.getMessage());
 		}
-
 	}
 
 	private static void query(Statement stmt, String url, String stm) {

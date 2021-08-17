@@ -13,21 +13,21 @@ import com.example.app.remote.RStockRW;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class Server {
 	public static void main(String[] args) {
 		String stockR = args.length < 1 // URL of stock R
-				? Names.STOCK_R // default location
+				? Names.STOCK_R.value() // default location
 				: args[0]; // supplied location
 
 		String stockRW = args.length < 2 // URL of stock RW
-				? Names.STOCK_RW // default location
+				? Names.STOCK_RW.value() // default location
 				: args[1]; // supplied location
 
 		String order = args.length < 3 // URL of order manip
-				? Names.ORDER // default location
+				? Names.ORDER.value() // default location
 				: args[2]; // supplied location
 
 		(new Server()).bind(stockR, stockRW, order);

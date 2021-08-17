@@ -21,10 +21,16 @@ import com.example.app.remote.RemoteStockRI;
  * Setup connection to the middle tier
  * 
  * @author matti
- * @version 3.0
+ * @version 3.2
  */
 
 public class FStockR implements StockReader {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2138086458011024379L;
+
+	private static final String NET = "Net: ";
 	private RemoteStockRI aRStockR = null;
 	private String theStockURL = null;
 
@@ -60,7 +66,7 @@ public class FStockR implements StockReader {
 			return aRStockR.exists(number);
 		} catch (RemoteException e) {
 			aRStockR = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 
@@ -78,7 +84,7 @@ public class FStockR implements StockReader {
 			return aRStockR.getDetails(number);
 		} catch (RemoteException e) {
 			aRStockR = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 
@@ -90,7 +96,7 @@ public class FStockR implements StockReader {
 			return aRStockR.getImage(number);
 		} catch (RemoteException e) {
 			aRStockR = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 

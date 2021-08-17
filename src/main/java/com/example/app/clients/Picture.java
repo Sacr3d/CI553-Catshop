@@ -18,18 +18,18 @@ import javax.swing.ImageIcon;
  */
 public class Picture extends Canvas {
 	private static final long serialVersionUID = 1;
-	private int width = 260;
-	private int height = 260;
+	private int pictureWidth = 260;
+	private int pictureHieght = 260;
 	private transient Image thePicture = null;
 
 	public Picture() {
-		setSize(width, height);
+		setSize(pictureWidth, pictureHieght);
 	}
 
 	public Picture(int aWidth, int aHeight) {
-		width = aWidth;
-		height = aHeight;
-		setSize(width, height);
+		pictureWidth = aWidth;
+		pictureHieght = aHeight;
+		setSize(pictureWidth, pictureHieght);
 	}
 
 	public void set(ImageIcon ic) {
@@ -61,9 +61,9 @@ public class Picture extends Canvas {
 	 */
 
 	public void drawImage(Graphics2D g) {
-		setSize(width, height);
+		setSize(pictureWidth, pictureHieght);
 		g.setPaint(Color.white);
-		g.fill(new Rectangle2D.Double(0, 0, width, height));
+		g.fill(new Rectangle2D.Double(0, 0, pictureWidth, pictureHieght));
 		if (thePicture != null) {
 			g.drawImage(thePicture, 0, 0, null);
 		}

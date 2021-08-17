@@ -5,10 +5,10 @@ package com.example.app.debug;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 public class DEBUG {
-	private static boolean debug = false;
+	private static boolean enableDebug = false;
 	private static boolean oldState = false;
 
 	/**
@@ -19,8 +19,8 @@ public class DEBUG {
 	 */
 	public static boolean set(boolean state) {
 		synchronized (DEBUG.class) {
-			oldState = debug;
-			debug = state;
+			oldState = enableDebug;
+			enableDebug = state;
 			return oldState;
 		}
 	}
@@ -30,7 +30,7 @@ public class DEBUG {
 	 */
 	public static void revert() {
 		synchronized (DEBUG.class) {
-			debug = oldState;
+			enableDebug = oldState;
 		}
 	}
 
@@ -41,7 +41,7 @@ public class DEBUG {
 	 * @param params Arguments
 	 */
 	public static void trace(String fmt, Object... params) {
-		if (debug) {
+		if (enableDebug) {
 			synchronized (DEBUG.class) {
 				System.out.printf(fmt, params);
 				System.out.println();
@@ -87,5 +87,12 @@ public class DEBUG {
 			System.out.println();
 			System.exit(-1);
 		}
+	}
+
+	/**
+	 * non-public constructor
+	 */
+	private DEBUG() {
+		throw new IllegalStateException("Utility class");
 	}
 }

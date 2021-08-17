@@ -5,11 +5,21 @@ package com.example.app.middle;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 4.0
  */
 
-public class Names {
-	public static final String STOCK_RW = "rmi://localhost/stock_rw";
-	public static final String STOCK_R = "rmi://localhost/stock_r";
-	public static final String ORDER = "rmi://localhost/order";
+public enum Names {
+
+	STOCK_RW("rmi://localhost/stock_rw"), STOCK_R("rmi://localhost/stock_r"), ORDER("rmi://localhost/order");
+
+	private final String value;
+
+	Names(String value) {
+		this.value = value;
+	}
+
+	public String value() {
+		return this.value;
+	}
+
 }

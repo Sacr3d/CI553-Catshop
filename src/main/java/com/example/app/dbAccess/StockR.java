@@ -30,10 +30,12 @@ import com.example.app.middle.StockReader;
  * Implements read only access to the stock database.
  * 
  * @author matti
- * @version 3.1
+ * @version 3.2
  *
  */
 public class StockR implements StockReader {
+	private static final String WHERE_PRODUCT_TABLE_PRODUCT_NO = "  where  ProductTable.productNo = '";
+
 	/**
 	 * 
 	 */
@@ -92,8 +94,8 @@ public class StockR implements StockReader {
 	public synchronized boolean exists(String pNum) throws StockException {
 
 		try {
-			ResultSet rs = getStatementObject().executeQuery(
-					"select price from ProductTable " + "  where  ProductTable.productNo = '" + pNum + "'");
+			ResultSet rs = getStatementObject()
+					.executeQuery("select price from ProductTable " + WHERE_PRODUCT_TABLE_PRODUCT_NO + pNum + "'");
 			boolean res = rs.next();
 			DEBUG.trace("DB StockR: exists(%s) -> %s", pNum, (res ? "T" : "F"));
 			return res;
@@ -113,7 +115,7 @@ public class StockR implements StockReader {
 		try {
 			Product dt = new Product("0", "", 0.00, 0);
 			ResultSet rs = getStatementObject().executeQuery("select description, price, stockLevel "
-					+ "  from ProductTable, StockTable " + "  where  ProductTable.productNo = '" + pNum + "' "
+					+ "  from ProductTable, StockTable " + WHERE_PRODUCT_TABLE_PRODUCT_NO + pNum + "' "
 					+ "  and    StockTable.productNo   = '" + pNum + "'");
 			if (rs.next()) {
 				dt.setProductNum(pNum);
@@ -137,8 +139,8 @@ public class StockR implements StockReader {
 	public synchronized ImageIcon getImage(String pNum) throws StockException {
 		String filename = "default.jpg";
 		try {
-			ResultSet rs = getStatementObject().executeQuery(
-					"select picture from ProductTable " + "  where  ProductTable.productNo = '" + pNum + "'");
+			ResultSet rs = getStatementObject()
+					.executeQuery("select picture from ProductTable " + WHERE_PRODUCT_TABLE_PRODUCT_NO + pNum + "'");
 
 			boolean res = rs.next();
 			if (res)
@@ -149,7 +151,6 @@ public class StockR implements StockReader {
 			throw new StockException("SQL getImage: " + e.getMessage());
 		}
 
-		// DEBUG.trace( "DB StockR: getImage -> %s", filename );
 		return new ImageIcon(filename);
 	}
 

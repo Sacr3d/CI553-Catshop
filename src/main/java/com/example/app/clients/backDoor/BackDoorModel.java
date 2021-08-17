@@ -14,7 +14,8 @@ import com.example.app.middle.StockReadWriter;
  * Implements the Model of the back door client
  * 
  * @author Mike Smith University of Brighton
- * @version 1.0
+ * @author matti
+ * @version 3.2
  */
 public class BackDoorModel implements Publisher<String> {
 	private Basket theBasket = null; // Bought items
@@ -95,7 +96,6 @@ public class BackDoorModel implements Publisher<String> {
 		String theAction = "";
 		theBasket = makeBasket();
 		pn = productNum.trim(); // Product no.
-		String pn = productNum.trim(); // Product no.
 		int amount = 0;
 		try {
 			String aQuantity = quantity.trim();

@@ -22,7 +22,7 @@ import com.example.app.middle.MiddleFactory;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.1
  */
 
 public class CustomerView implements Subscriber<String> {
@@ -30,6 +30,13 @@ public class CustomerView implements Subscriber<String> {
 	{
 		public static final String CHECK = "Check";
 		public static final String CLEAR = "Clear";
+
+		/**
+		 * non-public constructor
+		 */
+		private Name() {
+			throw new IllegalStateException("Utility class");
+		}
 	}
 
 	private static final int H = 300; // Height of window pixels

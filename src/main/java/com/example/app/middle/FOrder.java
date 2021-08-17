@@ -18,10 +18,17 @@ import com.example.app.remote.RemoteOrderI;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.0
+ * @version 3.01
  */
 
 public class FOrder implements OrderProcessing {
+	private static final String NET = "Net: ";
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 141104575767673855L;
+	
 	private RemoteOrderI aROrder = null;
 	private String theOrderURL = null;
 
@@ -50,7 +57,7 @@ public class FOrder implements OrderProcessing {
 			aROrder.newOrder(bought);
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -62,7 +69,7 @@ public class FOrder implements OrderProcessing {
 			return aROrder.uniqueNumber();
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -80,7 +87,7 @@ public class FOrder implements OrderProcessing {
 			return aROrder.getOrderToPick();
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -97,7 +104,7 @@ public class FOrder implements OrderProcessing {
 			return aROrder.informOrderPicked(orderNum);
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -114,7 +121,7 @@ public class FOrder implements OrderProcessing {
 			return aROrder.informOrderCollected(orderNum);
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 
@@ -130,7 +137,7 @@ public class FOrder implements OrderProcessing {
 			return aROrder.getOrderState();
 		} catch (Exception e) {
 			aROrder = null;
-			throw new OrderException("Net: " + e.getMessage());
+			throw new OrderException(NET + e.getMessage());
 		}
 	}
 }

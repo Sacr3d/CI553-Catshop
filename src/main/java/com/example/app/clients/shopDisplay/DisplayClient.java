@@ -11,15 +11,15 @@ import com.example.app.middle.RemoteMiddleFactory;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.1
+ * @version 3.2
  */
 public class DisplayClient {
 	public static void main(String[] args) {
 		String stockURL = args.length < 1 // URL of stock RW
-				? Names.STOCK_RW // default location
+				? Names.STOCK_RW.value() // default location
 				: args[0]; // supplied location
 		String orderURL = args.length < 2 // URL of order
-				? Names.ORDER // default location
+				? Names.ORDER.value() // default location
 				: args[1]; // supplied location
 
 		RemoteMiddleFactory mrf = new RemoteMiddleFactory();

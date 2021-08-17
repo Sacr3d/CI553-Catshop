@@ -2,6 +2,7 @@
 package com.example.app.orders;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +32,15 @@ import com.example.app.middle.OrderProcessing;
  * 
  * @author Michael Alexander Smith
  * @author matti
- * @version 3.1
+ * @version 3.2
  */
 
 public class OrderX implements OrderProcessing {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5319665038350076159L;
+
 	private static int theNextNumber = 1; // Start at 1
 	// Orders entered but waiting to be processed (picked)
 	private ArrayList<Basket> theWaitingTray = new ArrayList<>();
@@ -101,7 +107,7 @@ public class OrderX implements OrderProcessing {
 			theBeingPickedTray.add(process);
 			return process;
 		}
-		return null;
+		return (Basket) Collections.<Product>emptyList();
 	}
 
 	/**

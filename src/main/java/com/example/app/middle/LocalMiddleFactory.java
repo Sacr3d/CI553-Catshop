@@ -1,6 +1,7 @@
 /**
  * @author  Mike Smith University of Brighton
- * @version 2.1
+ * @author matti
+ * @version 3.1
  */
 
 package com.example.app.middle;
@@ -17,9 +18,9 @@ import com.example.app.orders.Order;
 // Pattern: Abstract Factory
 
 public class LocalMiddleFactory implements MiddleFactory {
-	private static StockR aStockR = null;
-	private static StockRW aStockRW = null;
-	private static Order aOrder = null;
+	private StockR aStockR = null;
+	private StockRW aStockRW = null;
+	private Order aOrder = null;
 
 	/**
 	 * Return an object to access the database for read only access. All users share

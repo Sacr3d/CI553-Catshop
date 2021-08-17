@@ -20,10 +20,12 @@ import com.example.app.remote.RemoteStockRWI;
  * Setup connection to the middle tier
  * 
  * @author matti
- * @version 3.1
+ * @version 3.3
  */
 
 public class FStockRW extends FStockR implements StockReadWriter {
+	private static final String NET = "Net: ";
+
 	/**
 	 * 
 	 */
@@ -37,7 +39,7 @@ public class FStockRW extends FStockR implements StockReadWriter {
 		theStockURL = url;
 	}
 
-	private void connect() throws StockException {
+	private void rmiConnect() throws StockException {
 		try // Setup
 		{ // connection
 			aRStockRW = // Connect to
@@ -61,11 +63,11 @@ public class FStockRW extends FStockR implements StockReadWriter {
 		DEBUG.trace("F_StockRW:buyStock()");
 		try {
 			if (aRStockRW == null)
-				connect();
+				rmiConnect();
 			return aRStockRW.buyStock(number, amount);
 		} catch (RemoteException e) {
 			aRStockRW = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 
@@ -81,11 +83,11 @@ public class FStockRW extends FStockR implements StockReadWriter {
 		DEBUG.trace("F_StockRW:addStock()");
 		try {
 			if (aRStockRW == null)
-				connect();
+				rmiConnect();
 			aRStockRW.addStock(number, amount);
 		} catch (RemoteException e) {
 			aRStockRW = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 
@@ -101,11 +103,11 @@ public class FStockRW extends FStockR implements StockReadWriter {
 		DEBUG.trace("F_StockRW:modifyStock()");
 		try {
 			if (aRStockRW == null)
-				connect();
+				rmiConnect();
 			aRStockRW.modifyStock(detail);
 		} catch (RemoteException e) {
 			aRStockRW = null;
-			throw new StockException("Net: " + e.getMessage());
+			throw new StockException(NET + e.getMessage());
 		}
 	}
 

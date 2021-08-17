@@ -24,7 +24,7 @@ import com.example.app.middle.OrderProcessing;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.3
+ * @version 3.4
  */
 
 public class Order implements OrderProcessing {
@@ -79,7 +79,7 @@ public class Order implements OrderProcessing {
 		for (Product pr : basket) {
 			fr.format("%-15.15s: %3d ", pr.getDescription(), pr.getQuantity());
 		}
-		fr.format(")");
+		fr.format("%s", ")");
 		fr.close();
 		return sb.toString();
 	}
@@ -176,29 +176,12 @@ public class Order implements OrderProcessing {
 	 * @return a Map with the keys: "Waiting", "BeingPicked", "ToBeCollected"
 	 */
 	public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
-		// DEBUG.trace( "DEBUG: get state of order system" );
 		Map<String, List<Integer>> res = new HashMap<>();
 
 		res.put("Waiting", orderNums(State.WAITING));
 		res.put("BeingPicked", orderNums(State.BEING_PICKED));
 		res.put("ToBeCollected", orderNums(State.TO_BE_COLLECTED));
 
-		return res;
-	}
-
-	/**
-	 * Return the list of order numbers in selected state
-	 * 
-	 * @param inState The state to find order numbers in
-	 * @return A list of order numbers
-	 */
-	private List<Integer> orderNumsOldWay(State inState) {
-		List<Integer> res = new ArrayList<>();
-		for (Folder folder : folders) {
-			if (folder.getState() == inState) {
-				res.add(folder.getBasket().getOrderNum());
-			}
-		}
 		return res;
 	}
 

@@ -16,7 +16,7 @@ public class DisplayController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 185236412480688765L;
-	
+
 	private DisplayModel model = null;
 
 	/**

@@ -24,7 +24,7 @@ import com.example.app.middle.StockReader;
 // hence the synchronized methods
 
 // mySQL
-//    no spaces after SQL statement ;
+//    no spaces after SQL statement 
 
 /**
  * Implements read only access to the stock database.

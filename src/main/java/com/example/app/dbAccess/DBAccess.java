@@ -3,7 +3,8 @@ package com.example.app.dbaccess;
 /**
   * Implements generic management of a database.
   * @author  Mike Smith University of Brighton
-  * @version 3.0
+  * @author matti
+  * @version 3.2
   */
 
 /**
@@ -14,9 +15,11 @@ public class DBAccess {
 
 	/**
 	 * Load the Apache Derby database driver
+	 * 
+	 * @throws NoDriverException
 	 */
-	public void loadDriver() throws Exception {
-		throw new RuntimeException("No driver");
+	public void loadDriver() throws NoDriverException {
+		throw new NoDriverException("No driver");
 	}
 
 	/**

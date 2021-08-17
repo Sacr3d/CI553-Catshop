@@ -48,7 +48,7 @@ public class Server {
 		}
 
 		try {
-			theStockR = new RStockR(urlStockR); // Stock R
+			theStockR = new RStockR(); // Stock R
 			Naming.rebind(urlStockR, theStockR); // bind to url
 			System.out.println("StockR  bound to: " + // Inform world
 					urlStockR); //
@@ -58,7 +58,7 @@ public class Server {
 			System.out.println("StockRW bound to: " + // Inform world
 					urlStockRW); //
 
-			theOrder = new ROrder(urlOrder); // Order
+			theOrder = new ROrder(); // Order
 			Naming.rebind(urlOrder, theOrder); // bind to url
 			System.out.println("Order   bound to: " + // Inform world
 					urlOrder);

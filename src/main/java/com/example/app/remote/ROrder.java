@@ -21,7 +21,7 @@ public class ROrder extends UnicastRemoteObject implements RemoteOrderI {
 	private static final long serialVersionUID = 1;
 	private Order aOrder = null;
 
-	public ROrder(String url) throws RemoteException {
+	public ROrder() throws RemoteException {
 		aOrder = new Order();
 	}
 

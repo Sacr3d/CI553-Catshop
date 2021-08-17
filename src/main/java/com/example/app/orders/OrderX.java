@@ -64,7 +64,7 @@ public class OrderX implements OrderProcessing {
 		for (Product pr : basket) {
 			fr.format("%-15.15s: %3d ", pr.getDescription(), pr.getQuantity());
 		}
-		fr.format(")");
+		fr.format("%s", ")");
 		fr.close();
 		return sb.toString();
 	}

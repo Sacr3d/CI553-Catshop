@@ -24,9 +24,9 @@ import com.example.app.clients.shopdisplay.DisplayView;
 import com.example.app.clients.warehousepick.PickController;
 import com.example.app.clients.warehousepick.PickModel;
 import com.example.app.clients.warehousepick.PickView;
+import com.example.app.debug.DEBUG;
 import com.example.app.middle.LocalMiddleFactory;
 import com.example.app.middle.MiddleFactory;
-import com.example.app.debug.DEBUG;
 
 /**
  * Starts all the clients as a single application. Good for testing the system

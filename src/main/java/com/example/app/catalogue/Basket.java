@@ -66,11 +66,11 @@ public class Basket extends ArrayList<Product> implements Serializable {
 					fr.format("%-14.14s ", pr.getDescription());
 					fr.format("(%3d) ", number);
 					fr.format("%s%7.2f", csign, pr.getPrice() * number);
-					fr.format("\n");
+					fr.format("%s", "\n");
 					total += pr.getPrice() * number;
 				}
-				fr.format("----------------------------\n");
-				fr.format("Total                       ");
+				fr.format("%s", "----------------------------\n");
+				fr.format("%s", "Total                       ");
 				fr.format("%s%7.2f%n", csign, total);
 			}
 		}

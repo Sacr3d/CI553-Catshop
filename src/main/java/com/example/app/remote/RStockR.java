@@ -24,7 +24,7 @@ public class RStockR extends java.rmi.server.UnicastRemoteObject implements Remo
 	private static final long serialVersionUID = 1;
 	private StockR aStockR = null;
 
-	public RStockR(String url) throws RemoteException, StockException {
+	public RStockR() throws RemoteException, StockException {
 		aStockR = new StockR();
 	}
 

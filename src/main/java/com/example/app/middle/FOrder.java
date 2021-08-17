@@ -28,7 +28,7 @@ public class FOrder implements OrderProcessing {
 	 * 
 	 */
 	private static final long serialVersionUID = 141104575767673855L;
-	
+
 	private RemoteOrderI aROrder = null;
 	private String theOrderURL = null;
 

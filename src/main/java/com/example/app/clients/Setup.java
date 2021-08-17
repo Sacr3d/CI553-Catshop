@@ -16,10 +16,11 @@ import com.example.app.dbaccess.DBAccessFactory;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.3 Derby
+ * @version 3.4 Derby
  */
 
 public class Setup {
+	private static final String PADDING = "%-14.14s ";
 	private static final String INSERT_INTO_STOCK_TABLE_VALUES = "insert into StockTable values ";
 	private static final String INSERT_INTO_PRODUCT_TABLE_VALUES = "insert into ProductTable values ";
 	private static String[] sqlStatements = {
@@ -123,7 +124,7 @@ public class Setup {
 			default:
 				stmt.execute(sqlStatement);
 			}
-			// System.out.println();
+
 		} catch (Exception e) {
 			System.out.println("problems with SQL sent to " + dbDriver.urlOfDatabase() + "\n" + sqlStatement + "\n"
 					+ e.getMessage());
@@ -141,38 +142,26 @@ public class Setup {
 
 			for (int j = 1; j <= cols; j++) {
 				String name = md.getColumnName(j);
-				System.out.printf("%-14.14s ", name);
+				System.out.printf(PADDING, name);
 				names.add(name);
 			}
 			System.out.println();
 
 			for (int j = 1; j <= cols; j++) {
-				System.out.printf("%-14.14s ", md.getColumnTypeName(j));
+				System.out.printf(PADDING, md.getColumnTypeName(j));
 			}
 			System.out.println();
 
 			while (res.next()) {
 				for (int j = 0; j < cols; j++) {
 					String name = names.get(j);
-					System.out.printf("%-14.14s ", res.getString(name));
+					System.out.printf(PADDING, res.getString(name));
 				}
 				System.out.println();
 			}
 
 		} catch (Exception e) {
 			System.err.println("problems with SQL sent to " + url + "\n" + e.getMessage());
-		}
-	}
-
-	private static String m(int len, String s) {
-		if (s.length() >= len) {
-			return s.substring(0, len - 1) + " ";
-		} else {
-			StringBuilder res = new StringBuilder(len);
-			res.append(s);
-			for (int i = s.length(); i < len; i++)
-				res.append(' ');
-			return res.toString();
 		}
 	}
 

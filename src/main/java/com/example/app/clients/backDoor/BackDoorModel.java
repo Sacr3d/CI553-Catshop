@@ -15,7 +15,7 @@ import com.example.app.middle.StockReadWriter;
  * 
  * @author Mike Smith University of Brighton
  * @author matti
- * @version 3.2
+ * @version 3.3
  */
 public class BackDoorModel implements Publisher<String> {
 	private Basket theBasket = null; // Bought items
@@ -99,17 +99,9 @@ public class BackDoorModel implements Publisher<String> {
 		int amount = 0;
 		try {
 			String aQuantity = quantity.trim();
-			try {
-				amount = Integer.parseInt(aQuantity); // Convert
-				if (amount < 0)
-					throw new NumberFormatException("-ve");
-			} catch (Exception err) {
-				theAction = "Invalid quantity";
-				subscriber.onNext(theAction);
-				return;
-			}
+			amount = validateQuantity(aQuantity);
 
-			if (theStock.exists(pn)) // Stock Exists?
+			if (amount > 0 && theStock.exists(pn)) // Stock Exists?
 			{ // T
 				theStock.addStock(pn, amount); // Re stock
 				Product pr = theStock.getDetails(pn); // Get details
@@ -123,6 +115,27 @@ public class BackDoorModel implements Publisher<String> {
 			theAction = e.getMessage();
 		}
 		subscriber.onNext(theAction);
+	}
+
+	/**
+	 * returns a valid int for the amount string
+	 * 
+	 * @param aQuantity string value for quantity
+	 * @return validated quantity
+	 */
+	private int validateQuantity(String aQuantity) {
+		String theAction;
+		int amount = 0;
+		try {
+			amount = Integer.parseInt(aQuantity); // Convert
+			if (amount < 0)
+				throw new NumberFormatException("-ve");
+		} catch (Exception err) {
+			theAction = "Invalid quantity";
+			subscriber.onNext(theAction);
+			return 0;
+		}
+		return amount;
 	}
 
 	/**
